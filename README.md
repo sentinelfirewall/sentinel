@@ -16,3 +16,9 @@ Replace [panel] with your control panel name:
 ```
 curl -s https://raw.githubusercontent.com/waytotheweb/scripts/refs/heads/main/cxs/uninstall.[panel].sh | bash
 ```
+
+## osm:
+Replace [panel] with your control panel name:
+```
+curl -s https://raw.githubusercontent.com/waytotheweb/scripts/refs/heads/main/osm/uninstall.[panel].sh | bash
+```
