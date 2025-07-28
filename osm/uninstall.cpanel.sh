@@ -31,7 +31,5 @@ fi
 rm -Rfv /etc/osm
 cd
 
-wget -q -O /dev/null http://license.configserver.com/cgi-bin/osm/uninstall.cgi
-
 echo
 echo "...Done"

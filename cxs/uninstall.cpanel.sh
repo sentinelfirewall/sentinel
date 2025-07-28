@@ -57,7 +57,5 @@ rm -Rfv /etc/cxs
 rm -fv /usr/local/csf/lib/ConfigServer/cxs.pm
 cd
 
-wget -q -O /dev/null http://license.configserver.com/cgi-bin/cxs/uninstall.cgi
-
 echo
 echo "...Done"

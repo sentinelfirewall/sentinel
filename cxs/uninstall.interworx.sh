@@ -53,7 +53,5 @@ rm -Rfv /usr/local/interworx/plugins/configservercxs /usr/local/interworx/html/c
 
 cd
 
-wget -qO -o /dev/null - - http://license.configserver.com/cgi-bin/cxs/uninstall.cgi
-
 echo
 echo "...Done"

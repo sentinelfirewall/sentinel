@@ -50,7 +50,5 @@ rm -Rfv /etc/cxs /usr/local/vesta/web/list/cxs/
 rm -fv /usr/local/csf/lib/ConfigServer/cxs.pm
 sed -i "/CXS/d" /usr/local/vesta/web/templates/admin/panel.html
 
-wget -qO -o /dev/null - - http://license.configserver.com/cgi-bin/cxs/uninstall.cgi
-
 echo
 echo "...Done"

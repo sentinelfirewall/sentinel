@@ -61,7 +61,5 @@ fi
 
 service lscpd restart
 
-wget -qO -o /dev/null - - http://license.configserver.com/cgi-bin/cxs/uninstall.cgi
-
 echo
 echo "...Done"
