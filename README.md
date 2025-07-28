@@ -26,3 +26,27 @@ bash /etc/osm/uninstall.sh
 ```
 bash /etc/csf/uninstall.sh
 ```
+
+## cmc:
+
+```
+https://github.com/waytotheweb/scripts/blob/main/cmc/cmc_uninstall.sh?raw=true | bash
+```
+
+## cmm:
+
+```
+https://github.com/waytotheweb/scripts/blob/main/cmc/cmm_uninstall.sh?raw=true | bash
+```
+
+## cmq:
+
+```
+https://github.com/waytotheweb/scripts/blob/main/cmc/cmq_uninstall.sh?raw=true | bash
+```
+
+## cse:
+
+```
+https://github.com/waytotheweb/scripts/blob/main/cmc/cse_uninstall.sh?raw=true | bash
+```
