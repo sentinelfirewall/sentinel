@@ -10,3 +10,9 @@
 curl -s -o msuninstall.pl  https://raw.githubusercontent.com/waytotheweb/scripts/refs/heads/main/MailScanner/msuninstall.pl
 curl -s https://raw.githubusercontent.com/waytotheweb/scripts/refs/heads/main/MailScanner/msuninstall.sh | bash
 ```
+
+## cxs:
+Replace [panel] with your control panel name:
+```
+https://raw.githubusercontent.com/waytotheweb/scripts/refs/heads/main/cxs/uninstall.[panel].sh | bash
+```
