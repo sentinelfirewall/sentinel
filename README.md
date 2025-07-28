@@ -14,5 +14,5 @@ curl -s https://raw.githubusercontent.com/waytotheweb/scripts/refs/heads/main/Ma
 ## cxs:
 Replace [panel] with your control panel name:
 ```
-https://raw.githubusercontent.com/waytotheweb/scripts/refs/heads/main/cxs/uninstall.[panel].sh | bash
+curl -s https://raw.githubusercontent.com/waytotheweb/scripts/refs/heads/main/cxs/uninstall.[panel].sh | bash
 ```
