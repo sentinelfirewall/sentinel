@@ -2,8 +2,6 @@
 
 ### The scripts in this repository will uninstall each product
 
-
-
 ## MailScanner:
 
 ```
@@ -12,13 +10,19 @@ curl -sL https://github.com/waytotheweb/scripts/blob/main/MailScanner/msuninstal
 ```
 
 ## cxs:
-Replace [panel] with your control panel name:
+
 ```
-curl -sL https://github.com/waytotheweb/scripts/blob/main/cxs/uninstall.[panel].sh?raw=true | bash
+bash /etc/cxs/uninstall.sh
 ```
 
 ## osm:
-Replace [panel] with your control panel name:
+
 ```
-curl -sL https://github.com/waytotheweb/scripts/blob/main/osm/uninstall.[panel].sh?raw=true | bash
+bash /etc/osm/uninstall.sh
+```
+
+## csf:
+
+```
+bash /etc/csf/uninstall.sh
 ```
