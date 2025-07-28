@@ -7,18 +7,18 @@
 ## MailScanner:
 
 ```
-curl -s -o msuninstall.pl  https://raw.githubusercontent.com/waytotheweb/scripts/refs/heads/main/MailScanner/msuninstall.pl
-curl -s https://raw.githubusercontent.com/waytotheweb/scripts/refs/heads/main/MailScanner/msuninstall.sh | bash
+curl -sL -o msuninstall.pl  https://github.com/waytotheweb/scripts/blob/main/MailScanner/msuninstall.pl?raw=true
+curl -sL https://github.com/waytotheweb/scripts/blob/main/MailScanner/msuninstall.sh?raw=true | bash
 ```
 
 ## cxs:
 Replace [panel] with your control panel name:
 ```
-curl -s https://raw.githubusercontent.com/waytotheweb/scripts/refs/heads/main/cxs/uninstall.[panel].sh | bash
+curl -sL https://github.com/waytotheweb/scripts/blob/main/cxs/uninstall.[panel].sh?raw=true | bash
 ```
 
 ## osm:
 Replace [panel] with your control panel name:
 ```
-curl -s https://raw.githubusercontent.com/waytotheweb/scripts/refs/heads/main/osm/uninstall.[panel].sh | bash
+curl -sL https://github.com/waytotheweb/scripts/blob/main/osm/uninstall.[panel].sh?raw=true | bash
 ```
