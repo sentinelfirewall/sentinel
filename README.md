@@ -36,13 +36,13 @@ https://github.com/waytotheweb/scripts/blob/main/cmc/cmc_uninstall.sh?raw=true |
 ## cmm:
 
 ```
-https://github.com/waytotheweb/scripts/blob/main/cmc/cmm_uninstall.sh?raw=true | bash
+https://github.com/waytotheweb/scripts/blob/main/cmm/cmm_uninstall.sh?raw=true | bash
 ```
 
 ## cmq:
 
 ```
-https://github.com/waytotheweb/scripts/blob/main/cmc/cmq_uninstall.sh?raw=true | bash
+https://github.com/waytotheweb/scripts/blob/main/cmq/cmq_uninstall.sh?raw=true | bash
 ```
 
 ## cse:
