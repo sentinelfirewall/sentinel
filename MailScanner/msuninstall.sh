@@ -6,8 +6,8 @@
 ###############################################################################
 PATH=$PATH:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
-if [ ! -e "msinstall.pl" ]; then
-	echo "You must be inside the msinstall directory to run this script"
+if [ ! -e "msuninstall.pl" ]; then
+	echo "Download msuninstall.pl here first"
     exit
 fi
 
