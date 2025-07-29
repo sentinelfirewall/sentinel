@@ -2,7 +2,7 @@
 
 ### The scripts in this repository will uninstall each product
 
-## MailScanner:
+## MailScanner and MSFE (MailScanner Front-End):
 
 ```
 curl -sL -o msuninstall.pl  https://github.com/waytotheweb/scripts/blob/main/MailScanner/msuninstall.pl?raw=true
