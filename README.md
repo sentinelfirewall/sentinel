@@ -1,52 +1,11 @@
-# Scripts for Way to the Web Limited Products
+# Way to the Web Limited Scripts
 
-### The scripts in this repository will uninstall each product
+### All files within this repository are subject to the [GPL license](LICENSE.txt) as outlined in [COPYING.md](COPYING.md)
 
-## MailScanner and MSFE (MailScanner Front-End):
+These are the final copies of the scripts.
 
-```
-curl -sL -o msuninstall.pl  https://github.com/waytotheweb/scripts/blob/main/MailScanner/msuninstall.pl?raw=true
-curl -sL https://github.com/waytotheweb/scripts/blob/main/MailScanner/msuninstall.sh?raw=true | bash
-```
+There is no intention to update any of these files, so any PR's or other contact will not receive a response. 
 
-## cxs:
+For uninstallation of any of our scripts, go to the [uninstallers](uninstallers) directory.
 
-```
-bash /etc/cxs/uninstall.sh
-```
 
-## osm:
-
-```
-bash /etc/osm/uninstall.sh
-```
-
-## csf:
-
-```
-bash /etc/csf/uninstall.sh
-```
-
-## cmc:
-
-```
-curl -sL https://github.com/waytotheweb/scripts/blob/main/cmc/cmc_uninstall.sh?raw=true | bash
-```
-
-## cmm:
-
-```
-curl -sL https://github.com/waytotheweb/scripts/blob/main/cmm/cmm_uninstall.sh?raw=true | bash
-```
-
-## cmq:
-
-```
-curl -sL https://github.com/waytotheweb/scripts/blob/main/cmq/cmq_uninstall.sh?raw=true | bash
-```
-
-## cse:
-
-```
-curl -sL https://github.com/waytotheweb/scripts/blob/main/cse/cse_uninstall.sh?raw=true | bash
-```
