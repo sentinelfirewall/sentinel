@@ -448,7 +448,7 @@ sub getdownloadserver {
 		}
 		$chosen = $servers[rand @servers];
 	}
-##	if ($chosen eq "") {$chosen = "download.configserver.com"}
+##	if ($chosen eq "") {$chosen = "sentinel.openpanel.org"}
 	return $chosen;
 }
 ## end getdownloadserver
