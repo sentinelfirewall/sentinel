@@ -448,7 +448,7 @@ sub getdownloadserver {
 		}
 		$chosen = $servers[rand @servers];
 	}
-##	if ($chosen eq "") {$chosen = "sentinel.openpanel.org"}
+	if ($chosen eq "") {$chosen = "https://raw.githubusercontent.com/stefanpejcic/sentinelfw/refs/heads/main/"}
 	return $chosen;
 }
 ## end getdownloadserver
