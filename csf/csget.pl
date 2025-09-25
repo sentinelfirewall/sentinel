@@ -57,14 +57,6 @@ if (-e "/usr/bin/GET") {$GET = "/usr/bin/GET -sd -t 120"}
 
 my %versions;
 if (-e "/etc/csf/csf.pl") {$versions{"/csf/version.txt"} = "/var/lib/configserver/csf.txt"}
-if (-e "/etc/cxs/cxs.pl") {$versions{"/cxs/version.txt"} = "/var/lib/configserver/cxs.txt"}
-if (-e "/usr/local/cpanel/whostmgr/docroot/cgi/configserver/cmm.cgi") {$versions{"/cmm/cmmversion.txt"} = "/var/lib/configserver/cmm.txt"}
-if (-e "/usr/local/cpanel/whostmgr/docroot/cgi/configserver/cse.cgi") {$versions{"/cse/cseversion.txt"} = "/var/lib/configserver/cse.txt"}
-if (-e "/usr/local/cpanel/whostmgr/docroot/cgi/configserver/cmq.cgi") {$versions{"/cmq/cmqversion.txt"} = "/var/lib/configserver/cmq.txt"}
-if (-e "/usr/local/cpanel/whostmgr/docroot/cgi/configserver/cmc.cgi") {$versions{"/cmc/cmcversion.txt"} = "/var/lib/configserver/cmc.txt"}
-if (-e "/etc/osm/osmd.pl") {$versions{"/osm/osmversion.txt"} = "/var/lib/configserver/osm.txt"}
-if (-e "/usr/msfe/version.txt") {$versions{"/version.txt"} = "/var/lib/configserver/msinstall.txt"}
-if (-e "/usr/msfe/msfeversion.txt") {$versions{"/msfeversion.txt"} = "/var/lib/configserver/msfe.txt"}
 
 if (scalar(keys %versions) == 0) {
 	unlink $0;
@@ -85,7 +77,6 @@ foreach my $server (@downloadservers) {
 		unless (-e $versions{$version}) {
 			if (-e $versions{$version}.".error") {unlink $versions{$version}.".error"}
 			my $status = system("$cmd $versions{$version} $server$version");
-#			print "$cmd $versions{$version} $server$version\n";
 			if ($status) {
 				if ($GET ne "") {
 					open (my $ERROR, ">", $versions{$version}.".error");
@@ -94,7 +85,7 @@ foreach my $server (@downloadservers) {
 					my $GETstatus = system("$GET $server$version >> $versions{$version}".".error");
 				} else {
 					open (my $ERROR, ">", $versions{$version}.".error");
-					print $ERROR "Failed to retrieve latest version from ConfigServer";
+					print $ERROR "Failed to retrieve latest version from Github";
 					close ($ERROR);
 				}
 			}
