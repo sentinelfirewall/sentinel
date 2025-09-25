@@ -38,7 +38,7 @@ open STDERR, ">","/dev/null";
 
 $0 = "ConfigServer Version Check";
 
-my @downloadservers = ("https://raw.githubusercontent.com/stefanpejcic/sentinelfw/refs/heads/main/csf/");
+my @downloadservers = ("https://raw.githubusercontent.com/stefanpejcic/sentinelfw/refs/heads/main/");
 
 system("mkdir -p /var/lib/configserver/");
 system("rm -f /var/lib/configserver/*.txt /var/lib/configserver/*error");
