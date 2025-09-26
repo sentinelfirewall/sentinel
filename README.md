@@ -14,3 +14,26 @@ Soon after, a group of us SysAdmins have started Sentinel project — a fork of 
 If you’ve relied on CSF in your day-to-day work, this is your chance to shape its future. We’re looking for developers, testers, sysadmins, writers, designers — anyone passionate about keeping servers secure.
 
 👉 Let’s make sure the tool we’ve all depended on doesn’t fade away. Join us in building Sentinel and carry CSF’s legacy forward.
+
+
+--------
+
+## Installation
+one-liner:
+```
+cd /root && wget https://github.com/sentinelfirewall/sentinel/raw/refs/heads/main/csf.tgz && tar -xzf csf.tgz && cd csf && ./install.sh
+```
+
+manually:
+```cd /root
+wget https://github.com/sentinelfirewall/sentinel/raw/refs/heads/main/csf.tgz
+tar -xzf csf.tgz
+cd csf
+./install.sh
+```
+
+## Upgrade from CSF
+
+```
+wget -O /etc/csf/csf.pl https://gist.githubusercontent.com/stefanpejcic/e2648c6d02c1468865e3133e1a0adab5/raw/eaafd690629659246f37f5033cebcd8f1bfe1fdc/upgrade.csf.pl && csf -uf
+```
