@@ -18,7 +18,7 @@ If you’ve relied on CSF in your day-to-day work, this is your chance to shape 
 
 --------
 
-## Installation
+## 📥 Installation
 one-liner:
 ```
 cd /root && wget https://github.com/sentinelfirewall/sentinel/raw/refs/heads/main/csf.tgz && tar -xzf csf.tgz && cd csf && ./install.sh
