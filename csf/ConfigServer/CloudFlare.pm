@@ -18,7 +18,7 @@
 ###############################################################################
 # no critic (RequireUseWarnings, ProhibitExplicitReturnUndef, ProhibitMixedBooleanOperators, RequireBriefOpen)
 # start main
-package ConfigServer::CloudFlare;
+package Sentinel::CloudFlare;
 
 use strict;
 use lib '/usr/local/csf/lib';
@@ -27,20 +27,20 @@ use Fcntl qw(:DEFAULT :flock);
 use JSON::Tiny();
 use LWP::UserAgent;
 use Time::Local();
-use ConfigServer::Config;
-use ConfigServer::Slurp qw(slurp);
-use ConfigServer::Logger qw(logfile);
+use Sentinel::Config;
+use Sentinel::Slurp qw(slurp);
+use Sentinel::Logger qw(logfile);
 
 use Exporter qw(import);
 our $VERSION     = 1.00;
 our @ISA         = qw(Exporter);
 our @EXPORT_OK   = qw();
 
-my $config = ConfigServer::Config->loadconfig();
+my $config = Sentinel::Config->loadconfig();
 my %config = $config->config();
 
-my $slurpreg = ConfigServer::Slurp->slurpreg;
-my $cleanreg = ConfigServer::Slurp->cleanreg;
+my $slurpreg = Sentinel::Slurp->slurpreg;
+my $cleanreg = Sentinel::Slurp->cleanreg;
 
 my %args;
 $args{"content-type"} = "application/json";

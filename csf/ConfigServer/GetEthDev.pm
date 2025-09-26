@@ -18,7 +18,7 @@
 ###############################################################################
 ## no critic (RequireUseWarnings, ProhibitExplicitReturnUndef, ProhibitMixedBooleanOperators, RequireBriefOpen)
 # start main
-package ConfigServer::GetEthDev;
+package Sentinel::GetEthDev;
 
 use strict;
 use lib '/usr/local/csf/lib';
@@ -26,9 +26,9 @@ use Carp;
 use Fcntl qw(:DEFAULT :flock);
 use IPC::Open3;
 use POSIX qw(locale_h);
-use ConfigServer::Config;
-use ConfigServer::CheckIP qw(checkip);
-use ConfigServer::Logger;
+use Sentinel::Config;
+use Sentinel::CheckIP qw(checkip);
+use Sentinel::Logger;
 
 use Exporter qw(import);
 our $VERSION     = 1.01;
@@ -46,7 +46,7 @@ sub new {
 	bless $self,$class;
 
 	my $status;
-	my $config = ConfigServer::Config->loadconfig();
+	my $config = Sentinel::Config->loadconfig();
 	my %config = $config->config();
 	my $ipv4reg = $config->ipv4reg;
 	my $ipv6reg = $config->ipv6reg;

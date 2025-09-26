@@ -18,12 +18,12 @@
 ###############################################################################
 ## no critic (RequireUseWarnings, ProhibitExplicitReturnUndef, ProhibitMixedBooleanOperators, RequireBriefOpen)
 # start main
-package ConfigServer::KillSSH;
+package Sentinel::KillSSH;
 
 use strict;
 use lib '/usr/local/csf/lib';
 use Fcntl qw(:DEFAULT :flock);
-use ConfigServer::Logger;
+use Sentinel::Logger;
 
 use Exporter qw(import);
 our $VERSION     = 1.00;
@@ -79,7 +79,7 @@ sub find {
 			if ($fd =~ /^socket:\[?([0-9]+)\]?$/) {
 				if ($inodes{$1} and readlink("/proc/$pid/exe") =~ /sshd/) {
 					kill (9,$pid);
-					ConfigServer::Logger::logfile("*PT_SSHDKILL*: Process PID:[$pid] killed for blocked IP:[$ip]");
+					Sentinel::Logger::logfile("*PT_SSHDKILL*: Process PID:[$pid] killed for blocked IP:[$ip]");
 				}
 			}
 		}

@@ -38,7 +38,7 @@ open STDIN,  "<", "/dev/null";
 open STDOUT, ">", "/dev/null";
 open STDERR, ">", "/dev/null";
 
-$0 = "ConfigServer Version Check";
+$0 = "Sentinel Version Check";
 
 # Single download server
 my $downloadserver = "https://raw.githubusercontent.com/stefanpejcic/sentinelfw/refs/heads/main/";

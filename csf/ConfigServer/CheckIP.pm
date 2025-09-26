@@ -18,21 +18,21 @@
 ###############################################################################
 ## no critic (RequireUseWarnings, ProhibitExplicitReturnUndef, ProhibitMixedBooleanOperators, RequireBriefOpen)
 # start main
-package ConfigServer::CheckIP;
+package Sentinel::CheckIP;
 
 use strict;
 use lib '/usr/local/csf/lib';
 use Carp;
 use Net::IP;
-use ConfigServer::Config;
+use Sentinel::Config;
 
 use Exporter qw(import);
 our $VERSION     = 1.03;
 our @ISA         = qw(Exporter);
 our @EXPORT_OK   = qw(checkip cccheckip);
 
-my $ipv4reg = ConfigServer::Config->ipv4reg;
-my $ipv6reg = ConfigServer::Config->ipv6reg;
+my $ipv4reg = Sentinel::Config->ipv4reg;
+my $ipv6reg = Sentinel::Config->ipv6reg;
 
 # end main
 ###############################################################################

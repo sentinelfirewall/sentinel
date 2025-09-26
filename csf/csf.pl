@@ -27,20 +27,20 @@ use IO::Handle;
 use IPC::Open3;
 use Net::CIDR::Lite;
 use Socket;
-use ConfigServer::Config;
-use ConfigServer::Slurp qw(slurp);
-use ConfigServer::CheckIP qw(checkip cccheckip);
-use ConfigServer::Ports;
-use ConfigServer::URLGet;
-use ConfigServer::Sanity qw(sanity);
-use ConfigServer::ServerCheck;
-use ConfigServer::ServerStats;
-use ConfigServer::Service;
-use ConfigServer::Messenger;
-use ConfigServer::RBLCheck;
-use ConfigServer::GetEthDev;
-use ConfigServer::Sendmail;
-use ConfigServer::LookUpIP qw(iplookup);
+use Sentinel::Config;
+use Sentinel::Slurp qw(slurp);
+use Sentinel::CheckIP qw(checkip cccheckip);
+use Sentinel::Ports;
+use Sentinel::URLGet;
+use Sentinel::Sanity qw(sanity);
+use Sentinel::ServerCheck;
+use Sentinel::ServerStats;
+use Sentinel::Service;
+use Sentinel::Messenger;
+use Sentinel::RBLCheck;
+use Sentinel::GetEthDev;
+use Sentinel::Sendmail;
+use Sentinel::LookUpIP qw(iplookup);
 
 umask(0177);
 
@@ -64,23 +64,23 @@ $ipscidr = Net::CIDR::Lite->new;
 eval {local $SIG{__DIE__} = undef; $ipscidr6->add("::1/128")};
 eval {local $SIG{__DIE__} = undef; $ipscidr->add("127.0.0.0/8")};
 
-$slurpreg = ConfigServer::Slurp->slurpreg;
-$cleanreg = ConfigServer::Slurp->cleanreg;
+$slurpreg = Sentinel::Slurp->slurpreg;
+$cleanreg = Sentinel::Slurp->cleanreg;
 $faststart = 0;
 
 &process_input;
 &load_config;
 
-$urlget = ConfigServer::URLGet->new($config{URLGET}, "csf/$version", $config{URLPROXY});
+$urlget = Sentinel::URLGet->new($config{URLGET}, "csf/$version", $config{URLPROXY});
 unless (defined $urlget) {
 	if (-e $config{CURL} or -e $config{WGET}) {
 		$config{URLGET} = 3;
-		$urlget = ConfigServer::URLGet->new($config{URLGET}, "csf/$version", $config{URLPROXY});
+		$urlget = Sentinel::URLGet->new($config{URLGET}, "csf/$version", $config{URLPROXY});
 		print "*WARNING* URLGET set to use LWP but perl module is not installed, fallback to using CURL/WGET\n";
 		$warning .= "*WARNING* URLGET set to use LWP but perl module is not installed, fallback to using CURL/WGET\n";
 	} else {
 		$config{URLGET} = 1;
-		$urlget = ConfigServer::URLGet->new($config{URLGET}, "csf/$version", $config{URLPROXY});
+		$urlget = Sentinel::URLGet->new($config{URLGET}, "csf/$version", $config{URLPROXY});
 		print "*WARNING* URLGET set to use LWP but perl module is not installed, reverting to HTTP::Tiny\n";
 		$warning .= "*WARNING* URLGET set to use LWP but perl module is not installed, reverting to HTTP::Tiny\n";
 	}
@@ -260,7 +260,7 @@ sub csflock {
 ###############################################################################
 # start load_config
 sub load_config {
-	my $config = ConfigServer::Config->loadconfig();
+	my $config = Sentinel::Config->loadconfig();
 	%config = $config->config;
 	my %configsetting = $config->configsetting;
 	$ipv4reg = $config->ipv4reg;
@@ -277,8 +277,8 @@ sub load_config {
 	}
 
 	if ($config{CF_ENABLE}) {
-		require ConfigServer::CloudFlare;
-		import ConfigServer::CloudFlare;
+		require Sentinel::CloudFlare;
+		import Sentinel::CloudFlare;
 	}
 
 	$verbose = "";
@@ -341,9 +341,9 @@ sub load_config {
 			$blocklists{$name}{url} = $url;
 		}
 	}
-	if (-e "/etc/cxs/cxs.reputation" and -e "/usr/local/csf/lib/ConfigServer/cxs.pm") {
-		require ConfigServer::cxs;
-		import ConfigServer::cxs;
+	if (-e "/etc/cxs/cxs.reputation" and -e "/usr/local/csf/lib/Sentinel/cxs.pm") {
+		require Sentinel::cxs;
+		import Sentinel::cxs;
 		$cxsreputation = 1;
 		if (-e "/etc/cxs/cxs.blocklists") {
 			my $all = 0;
@@ -363,13 +363,13 @@ sub load_config {
 				}
 			}
 		}
-		%cxsports = ConfigServer::cxs::Rports();
+		%cxsports = Sentinel::cxs::Rports();
 	}
 
 	my @binaries = ("IPTABLES","IPTABLES_SAVE","IPTABLES_RESTORE","MODPROBE","SENDMAIL","PS","VMSTAT","LS","MD5SUM","TAR","CHATTR","UNZIP","GUNZIP","DD","TAIL","GREP","HOST");
 	if ($config{IPV6}) {push @binaries, ("IP6TABLES","IP6TABLES_SAVE","IP6TABLES_RESTORE")}
 	if ($config{LF_IPSET}) {push @binaries, ("IPSET")}
-	if (ConfigServer::Service::type() eq "systemd") {push @binaries, ("SYSTEMCTL")}
+	if (Sentinel::Service::type() eq "systemd") {push @binaries, ("SYSTEMCTL")}
 	my $hit = 0;
 	foreach my $bin (@binaries) {
 		if ($bin eq "SENDMAIL" and $config{LF_ALERT_SMTP}) {next}
@@ -475,10 +475,10 @@ if ($config{VESTA}) {$generic = " (VestaCP)"}
 # start dolfd
 sub dolfd {
 	my $lfd  = $input{argument};
-	if ($lfd eq "start") {ConfigServer::Service::startlfd()}
-	elsif ($lfd eq "stop") {ConfigServer::Service::stoplfd()}
-	elsif ($lfd eq "restart") {ConfigServer::Service::restartlfd()}
-	elsif ($lfd eq "status") {ConfigServer::Service::statuslfd()}
+	if ($lfd eq "start") {Sentinel::Service::startlfd()}
+	elsif ($lfd eq "stop") {Sentinel::Service::stoplfd()}
+	elsif ($lfd eq "restart") {Sentinel::Service::restartlfd()}
+	elsif ($lfd eq "status") {Sentinel::Service::statuslfd()}
 	else {print "csf: usage: csf --lfd [stop|start|restart|status]\n"}
 	return;
 }
@@ -490,7 +490,7 @@ sub dorestartall {
 	&dostop(1);
 	&dostart;
 	&csflock("unlock");
-	ConfigServer::Service::restartlfd();
+	Sentinel::Service::restartlfd();
 	return;
 }
 # end dorestartall
@@ -982,7 +982,7 @@ sub dostop {
 ###############################################################################
 # start dostart
 sub dostart {
-	if (ConfigServer::Service::type() eq "systemd") {
+	if (Sentinel::Service::type() eq "systemd") {
 		my ($childin, $childout);
 		my $cmdpid = open3($childin, $childout, $childout, $config{SYSTEMCTL},"is-active","firewalld");
 		my @reply = <$childout>;
@@ -3359,7 +3359,7 @@ sub dodisable {
 		}
 		close ($CONF) or &error(__LINE__,"Could not close /usr/local/directadmin/data/admin/services.status: $!");
 	}
-	ConfigServer::Service::stoplfd();
+	Sentinel::Service::stoplfd();
 	&dostop(0);
 
 	print "csf and lfd have been disabled\n";
@@ -3375,7 +3375,7 @@ sub doenable {
 	}
 	unlink ("/etc/csf/csf.disable");
 	&dostart;
-	ConfigServer::Service::startlfd();
+	Sentinel::Service::startlfd();
 	unless ($config{GENERIC}) {
 		sysopen (my $CONF, "/etc/chkserv.d/chkservd.conf", O_RDWR | O_CREAT) or &error(__LINE__,"Could not open /etc/chkserv.d/chkservd.conf: $!");
 		flock ($CONF, LOCK_EX) or &error(__LINE__,"Could not lock /etc/chkserv.d/chkservd.conf: $!");
@@ -3522,7 +3522,7 @@ sub version {
 ###############################################################################
 # start getethdev
 sub getethdev {
-	my $ethdev = ConfigServer::GetEthDev->new();
+	my $ethdev = Sentinel::GetEthDev->new();
 	my %g_ifaces = $ethdev->ifaces;
 	my %g_ipv4 = $ethdev->ipv4;
 	my %g_ipv6 = $ethdev->ipv6;
@@ -3844,7 +3844,7 @@ sub doupdate {
 				system ("rm -Rfv /usr/src/csf*");
 				print "\nRestarting csf and lfd...\n";
 				system ("/usr/sbin/csf -r");
-				ConfigServer::Service::restartlfd();
+				Sentinel::Service::restartlfd();
 				print "\n...All done.\n\nChangelog: https://$config{DOWNLOADSERVER}/csf/changelog.txt\n";
 			}
 		} else {
@@ -4622,7 +4622,7 @@ sub dotemprm {
 						}
 					}
 				}
-				if ($config{CF_ENABLE} and $message =~ /\(CF_ENABLE\)/) {ConfigServer::CloudFlare::action("remove",$ip,$config{CF_BLOCK})}
+				if ($config{CF_ENABLE} and $message =~ /\(CF_ENABLE\)/) {Sentinel::CloudFlare::action("remove",$ip,$config{CF_BLOCK})}
 				print "csf: $ip temporary block removed\n";
 				$unblock = 1;
 			} else {
@@ -4690,7 +4690,7 @@ sub dotemprm {
 						}
 					}
 				}
-				if ($config{CF_ENABLE} and $message =~ /\(CF_ENABLE\)/) {ConfigServer::CloudFlare::action("remove",$ip,"whitelist")}
+				if ($config{CF_ENABLE} and $message =~ /\(CF_ENABLE\)/) {Sentinel::CloudFlare::action("remove",$ip,"whitelist")}
 				print "csf: $ip temporary allow removed\n";
 				$unblock = 1;
 			} else {
@@ -4790,7 +4790,7 @@ sub dotemprmd {
 						}
 					}
 				}
-				if ($config{CF_ENABLE} and $message =~ /\(CF_ENABLE\)/) {ConfigServer::CloudFlare::action("remove",$ip,$config{CF_BLOCK})}
+				if ($config{CF_ENABLE} and $message =~ /\(CF_ENABLE\)/) {Sentinel::CloudFlare::action("remove",$ip,$config{CF_BLOCK})}
 				print "csf: $ip temporary block removed\n";
 				$unblock = 1;
 			} else {
@@ -4882,7 +4882,7 @@ sub dotemprma {
 						}
 					}
 				}
-				if ($config{CF_ENABLE} and $message =~ /\(CF_ENABLE\)/) {ConfigServer::CloudFlare::action("remove",$ip,"whitelist")}
+				if ($config{CF_ENABLE} and $message =~ /\(CF_ENABLE\)/) {Sentinel::CloudFlare::action("remove",$ip,"whitelist")}
 				print "csf: $ip temporary allow removed\n";
 				$unblock = 1;
 			} else {
@@ -4966,7 +4966,7 @@ sub dotempf {
 					}
 				}
 			}
-			if ($config{CF_ENABLE} and $message =~ /\(CF_ENABLE\)/) {ConfigServer::CloudFlare::action("remove",$ip,$config{CF_BLOCK})}
+			if ($config{CF_ENABLE} and $message =~ /\(CF_ENABLE\)/) {Sentinel::CloudFlare::action("remove",$ip,$config{CF_BLOCK})}
 			print "csf: $ip temporary block removed\n";
 		}
 		seek ($TEMPBAN, 0, 0);
@@ -5026,7 +5026,7 @@ sub dotempf {
 					}
 				}
 			}
-			if ($config{CF_ENABLE} and $message =~ /\(CF_ENABLE\)/) {ConfigServer::CloudFlare::action("remove",$ip,"whitelist")}
+			if ($config{CF_ENABLE} and $message =~ /\(CF_ENABLE\)/) {Sentinel::CloudFlare::action("remove",$ip,"whitelist")}
 			print "csf: $ip temporary allow removed\n";
 		}
 		seek ($TEMPALLOW, 0, 0);
@@ -5220,7 +5220,7 @@ sub domessenger {
 ###############################################################################
 # start domail
 sub domail {
-	my $output = ConfigServer::ServerCheck::report();
+	my $output = Sentinel::ServerCheck::report();
 
 	if ($input{argument}) {
 		my $message = "From: root\n";
@@ -5231,7 +5231,7 @@ sub domail {
 		$message .= "\n";
 		$message .= $output;
 		my @message = split(/\n/,$message);
-		ConfigServer::Sendmail::relay($input{argument}, "", @message);
+		Sentinel::Sendmail::relay($input{argument}, "", @message);
 	} else {
 		print $output;
 		print "\n";
@@ -5242,7 +5242,7 @@ sub domail {
 ###############################################################################
 # start dorbls
 sub dorbls {
-	my ($failures, $output) = ConfigServer::RBLCheck::report(1,"",0);
+	my ($failures, $output) = Sentinel::RBLCheck::report(1,"",0);
 	my $failure_s = "failure";
 	if ($failures ne 1) {$failure_s .= "s"}
 	if ($failures eq "") {$failures = 0}
@@ -5255,7 +5255,7 @@ sub dorbls {
 		$message .= "\n";
 		$message .= $output;
 		my @message = split(/\n/,$message);
-		ConfigServer::Sendmail::relay($input{argument}, "", @message);
+		Sentinel::Sendmail::relay($input{argument}, "", @message);
 	} else {
 		print $output;
 		print "\n";
@@ -5442,8 +5442,8 @@ $fport,    $fopen,$fconn,$fpid,            $fcmd,                               
 
 	print "Ports listening for external connections and the executables running behind them:\n";
 	print "Port/Proto Open Conn  PID/User             Command Line                            Executable\n";
-	my %listen = ConfigServer::Ports->listening;
-	my %ports = ConfigServer::Ports->openports;
+	my %listen = Sentinel::Ports->listening;
+	my %ports = Sentinel::Ports->openports;
 	foreach my $protocol (sort keys %listen) {
 		foreach my $port (sort {$a <=> $b} keys %{$listen{$protocol}}) {
 			foreach my $pid (sort {$a <=> $b} keys %{$listen{$protocol}{$port}}) {
@@ -5465,7 +5465,7 @@ $fport,    $fopen,$fconn,$fpid,            $fcmd,                               
 # start domessengerv2
 sub domessengerv2 {
 	print "csf - MESSENGERV2 /etc/apache2/conf.d/csf_messenger.conf regeneration:\n\n";
-	ConfigServer::Messenger::messengerv2();
+	Sentinel::Messenger::messengerv2();
 	print "\n...Done.\n";
 	return;
 }
@@ -5502,7 +5502,7 @@ $ip,             $domain,             $mode,     $date,                    $comm
 
 		print "Target           Local User           Mode       Date                      Notes\n";
 		print "======           ==========           ====       ====                      =====\n";
-		my @domains = ConfigServer::CloudFlare::action("getlist","","","",$valuelist);
+		my @domains = Sentinel::CloudFlare::action("getlist","","","",$valuelist);
 		foreach my $domainkey (@domains) {
 			foreach my $key (sort {$domainkey->{$a}{created_on} <=> $domainkey->{$b}{created_on}} keys %{$domainkey}) {
 				if ($domainkey->{$key}{success}) {
@@ -5529,10 +5529,10 @@ $ip,             $domain,             $mode,     $date,                    $comm
 			print "Invalid add type, must be: [block], [challenge] or [whitelist]\n";
 			exit 1;
 		}
-		my $status = ConfigServer::CloudFlare::action("add",$value,$mode,"",$valuemorelist);
+		my $status = Sentinel::CloudFlare::action("add",$value,$mode,"",$valuemorelist);
 	}
 	elsif ($cmd eq "del") {
-		my $status = ConfigServer::CloudFlare::action("del",$setting,"whitelist","",$valuelist);
+		my $status = Sentinel::CloudFlare::action("del",$setting,"whitelist","",$valuelist);
 	}
 	elsif ($cmd eq "tempadd") {
 		my $mode;
@@ -5544,11 +5544,11 @@ $ip,             $domain,             $mode,     $date,                    $comm
 		}
 		$input{argument} = "$value $config{CF_TEMP}";
 		if ($setting eq "deny") {
-			my $status = ConfigServer::CloudFlare::action("deny",$value,$mode,"",$valuemorelist,1);
+			my $status = Sentinel::CloudFlare::action("deny",$value,$mode,"",$valuemorelist,1);
 			&dotempdeny("cf");
 		}
 		elsif ($setting eq "allow") {
-			my $status = ConfigServer::CloudFlare::action("allow",$value,$mode,"",$valuemorelist,1);
+			my $status = Sentinel::CloudFlare::action("allow",$value,$mode,"",$valuemorelist,1);
 			&dotempallow("cf");
 		}
 	}
@@ -5589,7 +5589,7 @@ sub dographs {
 		print "ST_SYSTEM is disabled\n";
 		exit 1;
 	}
-	if (!defined ConfigServer::ServerStats::init()) {
+	if (!defined Sentinel::ServerStats::init()) {
 		print "Perl module GD::Graph is not installed/working\n";
 		exit 1;
 	}
@@ -5617,16 +5617,16 @@ sub dographs {
 
 	print "Creating html pages and images...\n";
 
-	ConfigServer::ServerStats::charts($config{CC_LOOKUPS},$dir);
+	Sentinel::ServerStats::charts($config{CC_LOOKUPS},$dir);
 	open (my $CHARTS, ">", $dir."/charts.html");
 	flock ($CHARTS, LOCK_EX);
-	print $CHARTS ConfigServer::ServerStats::charts_html($config{CC_LOOKUPS},"");
+	print $CHARTS Sentinel::ServerStats::charts_html($config{CC_LOOKUPS},"");
 	close ($CHARTS);
 
-	ConfigServer::ServerStats::graphs($type,$config{ST_SYSTEM_MAXDAYS},$dir);
+	Sentinel::ServerStats::graphs($type,$config{ST_SYSTEM_MAXDAYS},$dir);
 	open (my $GRAPHS, ">", $dir."/graphs.html");
 	flock ($GRAPHS, LOCK_EX);
-	print $GRAPHS ConfigServer::ServerStats::graphs_html("");
+	print $GRAPHS Sentinel::ServerStats::graphs_html("");
 	close ($GRAPHS);
 
 	print "Created charts.html, graphs.html and their images in $dir\n";

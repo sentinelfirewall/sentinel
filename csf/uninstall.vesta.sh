@@ -54,7 +54,7 @@ rm -fv /usr/local/man/man1/csf.man.1
 
 rm -fv /usr/sbin/csf /usr/local/vesta/bin/csf.pl
 rm -Rfv /etc/csf /usr/local/vesta/web/list/csf/ 
-rm -fv /usr/local/csf/lib/ConfigServer/csf.pm
+rm -fv /usr/local/csf/lib/Sentinel/csf.pm
 sed -i "/CSF/d" /usr/local/vesta/web/templates/admin/panel.html
 
 echo

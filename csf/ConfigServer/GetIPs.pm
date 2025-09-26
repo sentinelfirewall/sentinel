@@ -18,24 +18,24 @@
 ###############################################################################
 ## no critic (RequireUseWarnings, ProhibitExplicitReturnUndef, ProhibitMixedBooleanOperators, RequireBriefOpen)
 # start main
-package ConfigServer::GetIPs;
+package Sentinel::GetIPs;
 
 use strict;
 use lib '/usr/local/csf/lib';
 use Carp;
 use Socket;
 use IPC::Open3;
-use ConfigServer::Config;
+use Sentinel::Config;
 
 use Exporter qw(import);
 our $VERSION     = 1.03;
 our @ISA         = qw(Exporter);
 our @EXPORT_OK   = qw(getips);
 
-my $config = ConfigServer::Config->loadconfig();
+my $config = Sentinel::Config->loadconfig();
 my %config = $config->config();
-my $ipv4reg = ConfigServer::Config->ipv4reg;
-my $ipv6reg = ConfigServer::Config->ipv6reg;
+my $ipv4reg = Sentinel::Config->ipv4reg;
+my $ipv6reg = Sentinel::Config->ipv6reg;
 
 # end main
 ###############################################################################

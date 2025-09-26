@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-#WHMADDON:addonupdates:ConfigServer Security&<b>Firewall</b>
+#WHMADDON:addonupdates:Sentinel Security&<b>Firewall</b>
 ###############################################################################
 # Copyright (C) 2006-2025 Jonathan Michaelson
 #
@@ -27,16 +27,16 @@ use Sys::Hostname qw(hostname);
 use IPC::Open3;
 
 use lib '/usr/local/csf/lib';
-use ConfigServer::DisplayUI;
-use ConfigServer::Config;
-use ConfigServer::Slurp qw(slurp);
+use Sentinel::DisplayUI;
+use Sentinel::Config;
+use Sentinel::Slurp qw(slurp);
 
 our ($script, $script_da, $images, $myv, %FORM, %daconfig);
 
-my $config = ConfigServer::Config->loadconfig();
+my $config = Sentinel::Config->loadconfig();
 my %config = $config->config;
-my $slurpreg = ConfigServer::Slurp->slurpreg;
-my $cleanreg = ConfigServer::Slurp->cleanreg;
+my $slurpreg = Sentinel::Slurp->slurpreg;
+my $cleanreg = Sentinel::Slurp->cleanreg;
 
 our %session;
 our @sessiondata;
@@ -146,7 +146,7 @@ unless ($FORM{action} eq "tailcmd" or $FORM{action} =~ /^cf/ or $FORM{action} eq
 <!doctype html>
 <html lang='en' $htmltag>
 <head>
-	<title>ConfigServer Security &amp; Firewall</title>
+	<title>Sentinel Security &amp; Firewall</title>
 	<meta charset='utf-8'>
 	<meta name='viewport' content='width=device-width, initial-scale=1'>
 	$bootstrapcss
@@ -184,12 +184,12 @@ EOF
 <div class='container-fluid'>
 <br>
 <div class='panel panel-default'>
-<h4><img src='$images/csf_small.png' style='padding-left: 10px'> ConfigServer Security &amp; Firewall - csf v$myv</h4>
+<h4><img src='$images/csf_small.png' style='padding-left: 10px'> Sentinel Security &amp; Firewall - csf v$myv</h4>
 </div>
 EOF
 }
 
-ConfigServer::DisplayUI::main(\%FORM, $script, $script_da, $images, $myv);
+Sentinel::DisplayUI::main(\%FORM, $script, $script_da, $images, $myv);
 
 unless ($FORM{action} eq "tailcmd" or $FORM{action} =~ /^cf/ or $FORM{action} eq "logtailcmd" or $FORM{action} eq "loggrepcmd") {
 	print <<EOF;

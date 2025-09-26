@@ -1,4 +1,4 @@
-package Cpanel::Config::ConfigObj::Driver::ConfigServercsf::META;
+package Cpanel::Config::ConfigObj::Driver::Sentinelcsf::META;
 
 use strict;
 
@@ -14,27 +14,27 @@ sub meta_version {
 }
 
 sub get_driver_name {
-    return 'ConfigServercsf_driver';
+    return 'Sentinelcsf_driver';
 }
 
 sub content {
     my ($locale_handle) = @_;
 
     my $content = {
-        'vendor' => 'Jonathan Michaelson',
-        'url'    => 'www.configserver.com',
+        'vendor' => 'Stefan Pejcic',
+        'url'    => 'github.com/sentinelfirewall/sentinel/',
         'name'   => {
-            'short'  => 'ConfigServercsf Driver',
-            'long'   => 'ConfigServercsf Driver',
+            'short'  => 'Sentinelcsf Driver',
+            'long'   => 'Sentinelcsf Driver',
             'driver' => get_driver_name(),
         },
         'since'    => 'cPanel 11.38.1',
-        'abstract' => "A ConfigServercsf driver",
+        'abstract' => "A Sentinelcsf driver",
         'version'  => $VERSION,
     };
 
     if ($locale_handle) {
-        $content->{'abstract'} = $locale_handle->maketext("ConfigServer csf driver");
+        $content->{'abstract'} = $locale_handle->maketext("Sentinel csf driver");
     }
 
     return $content;

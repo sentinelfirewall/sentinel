@@ -17,7 +17,7 @@
 # this program; if not, see <https://www.gnu.org/licenses>.
 ###############################################################################
 ## no critic (RequireUseWarnings, ProhibitExplicitReturnUndef, ProhibitMixedBooleanOperators, RequireBriefOpen)
-package ConfigServer::DisplayResellerUI;
+package Sentinel::DisplayResellerUI;
 
 use strict;
 use lib '/usr/local/csf/lib';
@@ -27,10 +27,10 @@ use File::Basename;
 use Net::CIDR::Lite;
 use IPC::Open3;
 
-use ConfigServer::Config;
-use ConfigServer::CheckIP qw(checkip);
-use ConfigServer::Sendmail;
-use ConfigServer::Logger;
+use Sentinel::Config;
+use Sentinel::CheckIP qw(checkip);
+use Sentinel::Sendmail;
+use Sentinel::Logger;
 
 use Exporter qw(import);
 our $VERSION     = 1.01;
@@ -74,7 +74,7 @@ sub main {
 	$hostshort = (split(/\./,$hostname))[0];
 	$tz = strftime("%z", localtime);
 
-	my $config = ConfigServer::Config->loadconfig();
+	my $config = Sentinel::Config->loadconfig();
 	%config = $config->config();
 
 	$panel = "cPanel";
@@ -119,9 +119,9 @@ sub main {
 						$line =~ s/\[text\]/Result of ALLOW:\n\n$text/ig;
 						push @message, $line;
 					}
-					ConfigServer::Sendmail::relay("", "", @message);
+					Sentinel::Sendmail::relay("", "", @message);
 				}
-				ConfigServer::Logger::logfile("$panel Reseller [$ENV{REMOTE_USER}]: ALLOW $FORM{ip}");
+				Sentinel::Logger::logfile("$panel Reseller [$ENV{REMOTE_USER}]: ALLOW $FORM{ip}");
 			}
 			print "<p><form action='$script' method='post'><input type='hidden' name='mobi' value='$FORM{mobi}'><input type='submit' class='btn btn-default' value='Return'></form></p>\n";
 		}
@@ -153,9 +153,9 @@ sub main {
 						$line =~ s/\[text\]/Result of DENY:\n\n$text/ig;
 						push @message, $line;
 					}
-					ConfigServer::Sendmail::relay("", "", @message);
+					Sentinel::Sendmail::relay("", "", @message);
 				}
-				ConfigServer::Logger::logfile("$panel Reseller [$ENV{REMOTE_USER}]: DENY $FORM{ip}");
+				Sentinel::Logger::logfile("$panel Reseller [$ENV{REMOTE_USER}]: DENY $FORM{ip}");
 			}
 			print "<p><form action='$script' method='post'><input type='hidden' name='mobi' value='$FORM{mobi}'><input type='submit' class='btn btn-default' value='Return'></form></p>\n";
 		}
@@ -193,9 +193,9 @@ sub main {
 					$line =~ s/\[text\]/Result of GREP before UNBLOCK:\n$text\n\nResult of UNBLOCK:\nPermanent:\n$text1\nTemporary:\n$text2\n/ig;
 					push @message, $line;
 				}
-				ConfigServer::Sendmail::relay("", "", @message);
+				Sentinel::Sendmail::relay("", "", @message);
 			}
-			ConfigServer::Logger::logfile("$panel Reseller [$ENV{REMOTE_USER}]: UNBLOCK $FORM{ip}");
+			Sentinel::Logger::logfile("$panel Reseller [$ENV{REMOTE_USER}]: UNBLOCK $FORM{ip}");
 		}
 		elsif ($FORM{action} eq "grep" and $rprivs{$ENV{REMOTE_USER}}{GREP}) {
 			print "<table class='table table-bordered table-striped'>\n";
@@ -208,7 +208,7 @@ sub main {
 		}
 		else {
 			print "<table class='table table-bordered table-striped'>\n";
-			print "<thead><tr><th align='left' colspan='2'>csf - ConfigServer Firewall options for $ENV{REMOTE_USER}</th></tr></thead>";
+			print "<thead><tr><th align='left' colspan='2'>csf - Sentinel Firewall options for $ENV{REMOTE_USER}</th></tr></thead>";
 			if ($rprivs{$ENV{REMOTE_USER}}{ALLOW}) {print "<tr><td><form action='$script' method='post'><input type='hidden' name='action' value='qallow'><input type='submit' class='btn btn-default' value='Quick Allow'></td><td width='100%'>Allow IP address <input type='text' name='ip' id='allowip' value='' size='18' style='background-color: lightgreen'> through the firewall and add to the allow file (csf.allow).<br>Comment for Allow: <input type='text' name='comment' value='' size='30'> (required)</form></td></tr>\n"}
 			if ($rprivs{$ENV{REMOTE_USER}}{DENY}) {print "<tr><td><form action='$script' method='post'><input type='hidden' name='action' value='qdeny'><input type='submit' class='btn btn-default' value='Quick Deny'></td><td width='100%'>Block IP address <input type='text' name='ip' value='' size='18' style='background-color: pink'> in the firewall and add to the deny file (csf.deny).<br>Comment for Block: <input type='text' name='comment' value='' size='30'> (required)</form></td></tr>\n"}
 			if ($rprivs{$ENV{REMOTE_USER}}{UNBLOCK}) {print "<tr><td><form action='$script' method='post'><input type='hidden' name='action' value='qkill'><input type='submit' class='btn btn-default' value='Quick Unblock'></td><td width='100%'>Remove IP address <input type='text' name='ip' value='' size='18'> from the firewall (temp and perm blocks)</form></td></tr>\n"}
@@ -219,7 +219,7 @@ sub main {
 
 	print "<br>\n";
 	print "<pre>csf: v$myv</pre>";
-	print "<p>&copy;2006-2023, <a href='http://www.configserver.com' target='_blank'>ConfigServer Services</a> (Jonathan Michaelson)</p>\n";
+	print "<p>&copy;2025, <a href='https://github.com/sentinelfirewall/sentinel' target='_blank'>Sentinel Project</a> (2006-2025 Jonathan Michaelson)</p>\n";
 
 	return;
 }

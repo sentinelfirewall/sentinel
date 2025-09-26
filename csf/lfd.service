@@ -1,5 +1,5 @@
 [Unit]
-Description=ConfigServer Firewall & Security - lfd
+Description=Sentinel Firewall & Security - lfd
 After=network.target csf.service
 
 [Service]

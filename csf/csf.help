@@ -1,13 +1,13 @@
 csf(1)							     General Commands Manual							  csf(1)
 
 NAME
-       csf - ConfigServer & Security Firewall
+       csf - Sentinel & Security Firewall
 
 SYNOPSIS
        csf [OPTIONS]
 
 DESCRIPTION
-       This   manual   documents   the	csf  command  line  options  for  the  ConfigServer  &	Security  Firewall.  See  /etc/csf/csf.conf  and
+       This   manual   documents   the	csf  command  line  options  for  the  Sentinel  &	Security  Firewall.  See  /etc/csf/csf.conf  and
        /etc/csf/readme.txt for more detailed information on how to use and configure this application.
 
 OPTIONS
@@ -214,9 +214,12 @@ FILES
 	      Detailed information about csf and lfd
 
 BUGS
-       Report bugs on the forums at http://forum.configserver.com
+       Report bugs on https://github.com/sentinelfirewall/sentinel/issues
 
 AUTHOR
        (c)2006-2023, Jonathan Michaelson (http://www.configserver.com)
+
+MAINTAINERS
+       (c)2025, Sentinel Project (https://github.com/sentinelfirewall/sentinel)
 
 																	  csf(1)

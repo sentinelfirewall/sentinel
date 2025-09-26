@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-#WHMADDON:csf:ConfigServer Security & Firewall
+#WHMADDON:csf:Sentinel Security & Firewall
 ###############################################################################
 # Copyright (C) 2006-2025 Jonathan Michaelson
 #
@@ -26,10 +26,10 @@ use Sys::Hostname qw(hostname);
 use IPC::Open3;
 
 use lib '/usr/local/csf/lib';
-use ConfigServer::DisplayUI;
-use ConfigServer::DisplayResellerUI;
-use ConfigServer::Config;
-use ConfigServer::Slurp qw(slurp);
+use Sentinel::DisplayUI;
+use Sentinel::DisplayResellerUI;
+use Sentinel::Config;
+use Sentinel::Slurp qw(slurp);
 
 use lib '/usr/local/cpanel';
 require Cpanel::Form;
@@ -47,10 +47,10 @@ Whostmgr::ACLS::init_acls();
 
 %FORM = Cpanel::Form::parseform();
 
-my $config = ConfigServer::Config->loadconfig();
+my $config = Sentinel::Config->loadconfig();
 my %config = $config->config;
-my $slurpreg = ConfigServer::Slurp->slurpreg;
-my $cleanreg = ConfigServer::Slurp->cleanreg;
+my $slurpreg = Sentinel::Slurp->slurpreg;
+my $cleanreg = Sentinel::Slurp->cleanreg;
 
 Cpanel::Rlimit::set_rlimit_to_infinity();
 
@@ -187,16 +187,16 @@ unless ($FORM{action} eq "tailcmd" or $FORM{action} =~ /^cf/ or $FORM{action} eq
 	print <<EOF;
 <div id="loader"></div><br />
 <div class='panel panel-default'>
-<h4><img src='$images/csf_small.png' style='padding-left: 10px'> ConfigServer Security &amp; Firewall - csf v$myv</h4></div>
+<h4><img src='$images/csf_small.png' style='padding-left: 10px'> Sentinel Security &amp; Firewall - csf v$myv</h4></div>
 EOF
 	if ($reregister ne "") {print $reregister}
 }
 
 #eval {
 if ($reseller) {
-	ConfigServer::DisplayResellerUI::main(\%FORM, $script, 0, $images, $myv);
+	Sentinel::DisplayResellerUI::main(\%FORM, $script, 0, $images, $myv);
 } else {
-	ConfigServer::DisplayUI::main(\%FORM, $script, 0, $images, $myv);
+	Sentinel::DisplayUI::main(\%FORM, $script, 0, $images, $myv);
 }
 #};
 #if ($@) {

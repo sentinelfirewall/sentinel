@@ -17,7 +17,7 @@
 # this program; if not, see <https://www.gnu.org/licenses>.
 ###############################################################################
 ## no critic (RequireUseWarnings, ProhibitExplicitReturnUndef, ProhibitMixedBooleanOperators, RequireBriefOpen)
-package ConfigServer::DisplayUI;
+package Sentinel::DisplayUI;
 
 use strict;
 use lib '/usr/local/csf/lib';
@@ -27,17 +27,17 @@ use File::Copy;
 use Net::CIDR::Lite;
 use IPC::Open3;
 
-use ConfigServer::Config;
-use ConfigServer::CheckIP qw(checkip);
-use ConfigServer::Ports;
-use ConfigServer::URLGet;
-use ConfigServer::Sanity qw(sanity);;
-use ConfigServer::ServerCheck;
-use ConfigServer::ServerStats;
-use ConfigServer::Service;
-use ConfigServer::RBLCheck;
-use ConfigServer::GetEthDev;
-use ConfigServer::Slurp qw(slurp);
+use Sentinel::Config;
+use Sentinel::CheckIP qw(checkip);
+use Sentinel::Ports;
+use Sentinel::URLGet;
+use Sentinel::Sanity qw(sanity);;
+use Sentinel::ServerCheck;
+use Sentinel::ServerStats;
+use Sentinel::Service;
+use Sentinel::RBLCheck;
+use Sentinel::GetEthDev;
+use Sentinel::Slurp qw(slurp);
 
 use Exporter qw(import);
 our $VERSION     = 1.01;
@@ -49,8 +49,8 @@ umask(0177);
 our ($chart, $ipscidr6, $ipv6reg, $ipv4reg, %config, %ips, $mobile,
 	 $urlget, %FORM, $script, $script_da, $images, $myv);
 
-my $slurpreg = ConfigServer::Slurp->slurpreg;
-my $cleanreg = ConfigServer::Slurp->cleanreg;
+my $slurpreg = Sentinel::Slurp->slurpreg;
+my $cleanreg = Sentinel::Slurp->cleanreg;
 
 #
 ###############################################################################
@@ -68,7 +68,7 @@ sub main {
 	$ipscidr6 = Net::CIDR::Lite->new;
 
 	my $thisui = $config{THIS_UI};
-	my $config = ConfigServer::Config->loadconfig();
+	my $config = Sentinel::Config->loadconfig();
 	%config = $config->config;
 	$config{THIS_UI} = $thisui;
 
@@ -76,8 +76,8 @@ sub main {
 	$ipv6reg = $config->ipv6reg;
 
 	if ($config{CF_ENABLE}) {
-		require ConfigServer::CloudFlare;
-		import ConfigServer::CloudFlare;
+		require Sentinel::CloudFlare;
+		import Sentinel::CloudFlare;
 	}
 
 	$mobile = 0;
@@ -85,13 +85,13 @@ sub main {
 
 	$chart = 1;
 	if ($config{ST_ENABLE}) {
-		if (!defined ConfigServer::ServerStats::init()) {$chart = 0}
+		if (!defined Sentinel::ServerStats::init()) {$chart = 0}
 	}
 
-	$urlget = ConfigServer::URLGet->new($config{URLGET}, "csf/$myv", $config{URLPROXY});
+	$urlget = Sentinel::URLGet->new($config{URLGET}, "csf/$myv", $config{URLPROXY});
 	unless (defined $urlget) {
 		$config{URLGET} = 1;
-		$urlget = ConfigServer::URLGet->new($config{URLGET}, "csf/$myv", $config{URLPROXY});
+		$urlget = Sentinel::URLGet->new($config{URLGET}, "csf/$myv", $config{URLPROXY});
 		print "<p>*WARNING* URLGET set to use LWP but perl module is not installed, reverting to HTTP::Tiny<p>\n";
 	}
 
@@ -131,7 +131,7 @@ sub main {
 	}
 	elsif ($FORM{action} eq "lfdstatus") {
 		print "<div><p>Show lfd status...</p>\n<pre class='comment' style='white-space: pre-wrap;'>\n";
-		ConfigServer::Service::statuslfd();
+		Sentinel::Service::statuslfd();
 		print "</pre>\n<p>...<b>Done</b>.</div>\n";
 		&printreturn;
 	}
@@ -146,7 +146,7 @@ sub main {
 	}
 	elsif ($FORM{action} eq "lfdstart") {
 		print "<div><p>Starting lfd...</p>\n<pre class='comment' style='white-space: pre-wrap;'>\n";
-		ConfigServer::Service::startlfd();
+		Sentinel::Service::startlfd();
 		print "</pre>\n<p>...<b>Done</b>.</p></div>\n";
 		&printreturn;
 	}
@@ -157,14 +157,14 @@ sub main {
 			close ($OUT);
 		} else {
 			print "<div><p>Restarting lfd...</p>\n<pre class='comment' style='white-space: pre-wrap;'>\n";
-			ConfigServer::Service::restartlfd();
+			Sentinel::Service::restartlfd();
 		}
 		print "</pre>\n<p>...<b>Done</b>.</p></div>\n";
 		&printreturn;
 	}
 	elsif ($FORM{action} eq "lfdstop") {
 		print "<div><p>Stopping lfd...</p>\n<pre class='comment' style='white-space: pre-wrap;'>\n";
-		ConfigServer::Service::stoplfd();
+		Sentinel::Service::stoplfd();
 		print "</pre>\n<p>...<b>Done</b>.</p></div>\n";
 		&printreturn;
 	}
@@ -712,7 +712,7 @@ EOF
 		&printreturn;
 	}
 	elsif ($FORM{action} eq "servercheck") {
-		print ConfigServer::ServerCheck::report($FORM{verbose});
+		print Sentinel::ServerCheck::report($FORM{verbose});
 
 		open (my $IN, "<", "/etc/cron.d/csf-cron");
 		flock ($IN, LOCK_SH);
@@ -773,7 +773,7 @@ EOF
 		print "<div><form action='$script' method='post'><input type='hidden' name='action' value='servercheck'><input type='submit' class='btn btn-default' value='Return'></form></div>\n";
 	}
 	elsif ($FORM{action} eq "rblcheck") {
-		my ($status, undef) = ConfigServer::RBLCheck::report($FORM{verbose},$images,1);
+		my ($status, undef) = Sentinel::RBLCheck::report($FORM{verbose},$images,1);
 
 		print "<div><b>These options can take a long time to run</b> (several minutes) depending on the number of IP addresses to check and the response speed of the DNS requests:</div>\n";
 		print "<br><div><form action='$script' method='post'><input type='hidden' name='action' value='rblcheck'><input type='hidden' name='verbose' value='1'><input type='submit' class='btn btn-default' value='Update All Checks (standard)'> Generates the normal report showing exceptions only</form></div>\n";
@@ -863,7 +863,7 @@ EOF
 			close ($OUT);
 		} else {
 			print "<div><p>Restarting lfd...</p>\n<pre class='comment' style='white-space: pre-wrap;'>\n";
-			ConfigServer::Service::restartlfd();
+			Sentinel::Service::restartlfd();
 		}
 		print "</pre>\n<p>...<b>Done</b>.</p></div>\n";
 		&resize("bot",1);
@@ -901,7 +901,7 @@ EOF
 			close ($OUT);
 		} else {
 			print "<div><p>Restarting lfd...</p>\n<pre class='comment' style='white-space: pre-wrap;'>\n";
-			ConfigServer::Service::restartlfd();
+			Sentinel::Service::restartlfd();
 		}
 		print "</pre>\n<p>...<b>Done</b>.</p></div>\n";
 		&printreturn;
@@ -1361,8 +1361,8 @@ EOD
 			}
 		}
 		close ($OUT);
-		ConfigServer::Config::resetconfig();
-		my $newconfig = ConfigServer::Config->loadconfig();
+		Sentinel::Config::resetconfig();
+		my $newconfig = Sentinel::Config->loadconfig();
 		my %newconfig = $config->config;
 		foreach my $key (keys %newconfig) {
 			my ($insane,$range,$default) = sanity($key,$newconfig{$key});
@@ -1456,7 +1456,7 @@ EOD
 			$sips{$line} = 1;
 		}
 
-		my $ethdev = ConfigServer::GetEthDev->new();
+		my $ethdev = Sentinel::GetEthDev->new();
 		my %g_ipv4 = $ethdev->ipv4;
 		my %g_ipv6 = $ethdev->ipv6;
 
@@ -1697,8 +1697,8 @@ EOD
 		print "<div><h4>Ports listening for external connections and the executables running behind them:</h4></div>\n";
 		print "<table class='table table-bordered table-striped'>\n";
 		print "<thead><tr><th>Port</th><th>Proto</th><th>Open</th><th>Conns</th><th>PID</th><th>User</th><th>Command Line</th><th>Executable</th></tr></thead>\n";
-		my %listen = ConfigServer::Ports->listening;
-		my %ports = ConfigServer::Ports->openports;
+		my %listen = Sentinel::Ports->listening;
+		my %ports = Sentinel::Ports->openports;
 		foreach my $protocol (sort keys %listen) {
 			foreach my $port (sort {$a <=> $b} keys %{$listen{$protocol}}) {
 				foreach my $pid (sort {$a <=> $b} keys %{$listen{$protocol}{$port}}) {
@@ -2150,27 +2150,6 @@ EOF
 		if (!$config{INTERWORX} and (-e "/etc/apf" or -e "/usr/local/bfd")) {
 			print "<tr><td><button name='action' value='remapf' type='submit' class='btn btn-default'>Remove APF/BFD</button></td><td style='width:100%'>Remove APF/BFD from the server. You must not run both APF or BFD with csf on the same server</td></tr>\n";
 		}
-		unless (-e "/etc/cxs/cxs.pl") {
-			if (-e "/usr/local/cpanel/version" or $config{DIRECTADMIN} or $config{INTERWORX} or $config{VESTA} or $config{CWP} or $config{CYBERPANEL}) {
-				print "<tr><td colspan='2'>\n";
-				print "<div class='bs-callout bs-callout-info h4'>Add server and user data protection against exploits using <a href='https://configserver.com/cp/cxs.html' target='_blank'>ConfigServer eXploit Scanner (cxs)</a></div>\n";
-				print "</td></tr>\n";
-			}
-		}
-		unless (-e "/etc/osm/osmd.pl") {
-			if (-e "/usr/local/cpanel/version" or $config{DIRECTADMIN}) {
-				print "<tr><td colspan='2'>\n";
-				print "<div class='bs-callout bs-callout-info h4'>Add outgoing spam monitoring and prevention using <a href='https://configserver.com/cp/osm.html' target='_blank'>ConfigServer Outgoing Spam Monitor(osm)</a></div>\n";
-				print "</td></tr>\n";
-			}
-		}
-		unless (-e "/usr/msfe/mschange.pl") {
-			if (-e "/usr/local/cpanel/version" or $config{DIRECTADMIN}) {
-				print "<tr><td colspan='2'>\n";
-				print "<div class='bs-callout bs-callout-info h4'>Add effective incoming virus and spam detection and user level processing using <a href='https://configserver.com/cp/msfe.html' target='_blank'>ConfigServer MailScanner Front-End (msfe)</a></div>\n";
-				print "</td></tr>\n";
-			}
-		}
 		print "</table>\n";
 		print "</form>\n";
 		if ($upgrade) {print "<script>\$('\#upgradebs').show();</script>\n"}
@@ -2186,7 +2165,7 @@ EOF
 		print "</table>\n";
 
 		print "<table class='table table-bordered table-striped'>\n";
-		print "<thead><tr><th colspan='2'>csf - ConfigServer Firewall</th></tr></thead>";
+		print "<thead><tr><th colspan='2'>csf - Sentinel Firewall</th></tr></thead>";
 		print "<tr><td><form action='$script' method='post'><button name='action' value='conf' type='submit' class='btn btn-default'>Firewall Configuration</button></form></td><td style='width:100%'>Edit the configuration file for the csf firewall and lfd</td></tr>\n";
 		print "<tr><td><form action='$script' method='post'><button name='action' value='profiles' type='submit' class='btn btn-default'>Firewall Profiles</button></form></td><td style='width:100%'>Apply pre-configured csf.conf profiles and backup/restore csf.conf</td></tr>\n";
 		print "<tr><td><form action='$script' method='post'><button name='action' value='status' type='submit' class='btn btn-default'>View iptables Rules</button></form></td><td style='width:100%'>Display the active iptables rules</td></tr>\n";
@@ -2237,7 +2216,7 @@ EOF
 		if ($config{CLUSTER_SENDTO}) {
 			print "<div id='cluster' class='tab-pane active'>\n";
 			print "<table class='table table-bordered table-striped'>\n";
-			print "<thead><tr><th colspan='2'>csf - ConfigServer lfd Cluster</th></tr></thead>";
+			print "<thead><tr><th colspan='2'>csf - Sentinel lfd Cluster</th></tr></thead>";
 
 			print "<tr><td><form action='$script' method='post'><button name='action' value='cping' type='submit' class='btn btn-default'>Cluster PING</button></form></td><td style='width:100%'>Ping each member of the cluster (logged in lfd.log)</td></tr>\n";
 			print "<tr><td><button onClick='\$(\"#callow\").submit();' class='btn btn-default'>Cluster Allow</button></td><td style='width:100%'><form action='$script' method='post' id='callow'><input type='submit' class='hide'><input type='hidden' name='action' value='callow'>Allow IP address <input type='text' name='ip' value='' size='18' style='background-color: lightgreen'> through the Cluster and add to the allow file (csf.allow)<br>Comment: <input type='text' name='comment' value='' size='30'></form></td></tr>\n";
@@ -2360,7 +2339,7 @@ EOF
 
 		print "<div class='panel panel-info'>\n";
 		print "<div class='panel-heading'>Development Contribution</div>";
-		print "<div class='panel-body'>We are very happy to be able to provide this and other products for free. However, it does take time for us to develop and maintain them. If you would like to help with their development by providing a PayPal contribution, please <a href='mailto:sales\@waytotheweb.com?Subject=ConfigServer%20Contribution'>contact us</a> for details</div>\n";
+		print "<div class='panel-body'>We are very happy to be able to provide and this product for free. However, it does take time for us to develop and maintain it. If you would like to help with the development by providing a PayPal contribution, please <a href='https://github.com/sentinelfirewall/sentinel'>contact us</a> for details</div>\n";
 		print "</div>\n";
 
 	}
@@ -2368,7 +2347,7 @@ EOF
 	unless ($FORM{action} eq "tailcmd" or $FORM{action} =~ /^cf/ or $FORM{action} eq "logtailcmd" or $FORM{action} eq "loggrepcmd") {
 		print "<br>\n";
 		print "<div class='well well-sm'>csf: v$myv</div>";
-		print "<p>&copy;2006-2023, <a href='http://www.configserver.com' target='_blank'>ConfigServer Services</a> (Jonathan Michaelson)</p>\n";
+		print "<p>&copy;2025, <a href='https://github.com/sentinelfirewall/sentinel' target='_blank'>Sentinel Project</a> (2006-2025 Jonathan Michaelson)</p>\n";
 		print "</div>\n";
 	}
 
@@ -2391,7 +2370,7 @@ sub printcmd {
 ###############################################################################
 # start getethdev
 sub getethdev {
-	my $ethdev = ConfigServer::GetEthDev->new();
+	my $ethdev = Sentinel::GetEthDev->new();
 	my %g_ipv4 = $ethdev->ipv4;
 	my %g_ipv6 = $ethdev->ipv6;
 	foreach my $key (keys %g_ipv4) {
@@ -2477,8 +2456,8 @@ sub chart {
 	close ($STATS);
 
 	if (@stats) {
-		ConfigServer::ServerStats::charts($config{CC_LOOKUPS},$imghddir);
-		print ConfigServer::ServerStats::charts_html($config{CC_LOOKUPS},$imgdir);
+		Sentinel::ServerStats::charts($config{CC_LOOKUPS},$imghddir);
+		print Sentinel::ServerStats::charts_html($config{CC_LOOKUPS},$imgdir);
 	} else {
 		print "<table class='table table-bordered table-striped'>\n";
 		print "<tr><td>No statistical data has been collected yet</td></tr></table>\n";
@@ -2536,7 +2515,7 @@ sub systemstats {
 	close ($STATS);
 
 	if (@stats > 1) {
-		ConfigServer::ServerStats::graphs($type,$config{ST_SYSTEM_MAXDAYS},$imghddir);
+		Sentinel::ServerStats::graphs($type,$config{ST_SYSTEM_MAXDAYS},$imghddir);
 
 		print "<div class='text-center'><form action='$script' method='post'><input type='hidden' name='action' value='systemstats'><select name='graph'>\n";
 		my $selected;
@@ -2588,7 +2567,7 @@ sub systemstats {
 		}
 		print "</select> <input type='submit' class='btn btn-default' value='Select Graphs'></form></div><br />\n";
 
-		print ConfigServer::ServerStats::graphs_html($imgdir);
+		print Sentinel::ServerStats::graphs_html($imgdir);
 
 		unless ($config{ST_MYSQL} and $config{ST_APACHE}) {
 			print "<br>\n<table class='table table-bordered table-striped'>\n";
@@ -2754,7 +2733,7 @@ sub savefile {
 ###############################################################################
 # start cloudflare
 sub cloudflare {
-	my $scope = &ConfigServer::CloudFlare::getscope();
+	my $scope = &Sentinel::CloudFlare::getscope();
 	print "<link rel='stylesheet' href='$images/bootstrap-chosen.css'>\n";
 	print "<script src='$images/chosen.min.js'></script>\n";
 	print "<script>\n";
@@ -2901,9 +2880,9 @@ sub csgetversion {
 		close ($VERSION);
 		chomp $newversion;
 		if ($newversion eq "") {
-			$newversion = "Failed to retrieve latest version from ConfigServer";
+			$newversion = "Failed to retrieve latest version from Sentinel";
 		} else {
-			$newversion = "Failed to retrieve latest version from ConfigServer: $newversion";
+			$newversion = "Failed to retrieve latest version from Sentinel: $newversion";
 		}
 	}
 	elsif (-e "/var/lib/configserver/".$product.".txt") {
@@ -2913,7 +2892,7 @@ sub csgetversion {
 		close ($VERSION);
 		chomp $newversion;
 		if ($newversion eq "") {
-			$newversion = "Failed to retrieve latest version from ConfigServer";
+			$newversion = "Failed to retrieve latest version from Sentinel";
 		} else {
 			if ($newversion =~ /^[\d\.]*$/) {
 				if ($newversion > $current) {$upgrade = 1} else {$newversion = ""}
@@ -2927,12 +2906,12 @@ sub csgetversion {
 		close ($VERSION);
 		chomp $newversion;
 		if ($newversion eq "") {
-			$newversion = "Failed to retrieve latest version from ConfigServer";
+			$newversion = "Failed to retrieve latest version from Sentinel";
 		} else {
-			$newversion = "Failed to retrieve latest version from ConfigServer: $newversion";
+			$newversion = "Failed to retrieve latest version from Sentinel: $newversion";
 		}
 	} else {
-		$newversion = "Failed to retrieve latest version from ConfigServer";
+		$newversion = "Failed to retrieve latest version from Sentinel";
 	}
 	return ($upgrade, $newversion);
 }

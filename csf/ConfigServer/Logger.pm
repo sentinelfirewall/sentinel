@@ -18,20 +18,20 @@
 ###############################################################################
 ## no critic (RequireUseWarnings, ProhibitExplicitReturnUndef, ProhibitMixedBooleanOperators, RequireBriefOpen)
 # start main
-package ConfigServer::Logger;
+package Sentinel::Logger;
 
 use strict;
 use lib '/usr/local/csf/lib';
 use Carp;
 use Fcntl qw(:DEFAULT :flock);
-use ConfigServer::Config;
+use Sentinel::Config;
 
 use Exporter qw(import);
 our $VERSION     = 1.02;
 our @ISA         = qw(Exporter);
 our @EXPORT_OK   = qw(logfile);
 
-my $config = ConfigServer::Config->loadconfig();
+my $config = Sentinel::Config->loadconfig();
 my %config = $config->config();
 my $hostname;
 if (-e "/proc/sys/kernel/hostname") {

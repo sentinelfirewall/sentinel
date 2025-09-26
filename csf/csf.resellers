@@ -56,5 +56,5 @@
 #
 # NOTE: As of version cPanel v11.8.1 you must additionally grant resellers
 # access via "WHM > Edit Reseller Nameservers and Privileges > Third Party
-# Services > ConfigServer Security & Firewall (Reseller UI)".
+# Services > Sentinel Security & Firewall (Reseller UI)".
 #

@@ -391,7 +391,7 @@ cp -avf install.txt /etc/csf/
 cp -avf version.txt /etc/csf/
 cp -avf license.txt /etc/csf/
 cp -avf webmin /usr/local/csf/lib/
-cp -avf ConfigServer /usr/local/csf/lib/
+cp -avf Sentinel /usr/local/csf/lib/
 cp -avf Net /usr/local/csf/lib/
 cp -avf Geo /usr/local/csf/lib/
 cp -avf Crypt /usr/local/csf/lib/
@@ -536,7 +536,7 @@ if ! cat /usr/local/CyberCP/CyberCP/urls.py | grep -q configservercsf; then
     sed -i "/pluginHolder/ i \ \ \ \ url(r'^configservercsf/',include('configservercsf.urls'))," /usr/local/CyberCP/CyberCP/urls.py
 fi
 #if ! cat /usr/local/CyberCP/baseTemplate/templates/baseTemplate/index.html | grep -q configservercsf; then
-#    sed -i "/url 'csf'/ i <li><a href='/configservercsf/' title='ConfigServer Security and Firewall'><span>ConfigServer Security \&amp; Firewall</span></a></li>" /usr/local/CyberCP/baseTemplate/templates/baseTemplate/index.html
+#    sed -i "/url 'csf'/ i <li><a href='/configservercsf/' title='Sentinel Security and Firewall'><span>Sentinel Security \&amp; Firewall</span></a></li>" /usr/local/CyberCP/baseTemplate/templates/baseTemplate/index.html
 #fi
 if ! cat /usr/local/CyberCP/baseTemplate/templates/baseTemplate/index.html | grep -q configserver; then
     sed -i "/trans 'Plugins'/ i \{\% include \"/usr/local/CyberCP/configservercsf/templates/configservercsf/menu.html\" \%\}" /usr/local/CyberCP/baseTemplate/templates/baseTemplate/index.html

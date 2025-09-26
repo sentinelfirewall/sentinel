@@ -24,17 +24,17 @@ use Fcntl qw(:DEFAULT :flock);
 use Sys::Hostname qw(hostname);
 use IPC::Open3;
 use lib '/usr/local/csf/lib';
-use ConfigServer::DisplayUI;
-use ConfigServer::DisplayResellerUI;
-use ConfigServer::Config;
-use ConfigServer::Slurp qw(slurp);
+use Sentinel::DisplayUI;
+use Sentinel::DisplayResellerUI;
+use Sentinel::Config;
+use Sentinel::Slurp qw(slurp);
 
 our ($reseller, %rprivs, $script, $images, $myv, %FORM, %in);
 
-my $config = ConfigServer::Config->loadconfig();
+my $config = Sentinel::Config->loadconfig();
 my %config = $config->config;
-my $slurpreg = ConfigServer::Slurp->slurpreg;
-my $cleanreg = ConfigServer::Slurp->cleanreg;
+my $slurpreg = Sentinel::Slurp->slurpreg;
+my $cleanreg = Sentinel::Slurp->cleanreg;
 
 foreach my $line (slurp("/etc/csf/csf.resellers")) {
 	$line =~ s/$cleanreg//g;
@@ -96,7 +96,7 @@ unless ($FORM{action} eq "tailcmd" or $FORM{action} =~ /^cf/ or $FORM{action} eq
 <!doctype html>
 <html lang='en'>
 <head>
-	<title>ConfigServer Security &amp; Firewall</title>
+	<title>Sentinel Security &amp; Firewall</title>
 	<meta charset='utf-8'>
 	<meta name='viewport' content='width=device-width, initial-scale=1'>
 	$bootstrapcss
@@ -133,7 +133,7 @@ EOF
 <div class='container-fluid'>
 <br>
 <div class='panel panel-default'>
-<h4><img src='$images/csf_small.png' style='padding-left: 10px'> ConfigServer Security &amp; Firewall - csf v$myv</h4>
+<h4><img src='$images/csf_small.png' style='padding-left: 10px'> Sentinel Security &amp; Firewall - csf v$myv</h4>
 </div>
 EOF
 }
@@ -141,7 +141,7 @@ EOF
 my $templatehtml;
 open (my $SCRIPTOUT, '>', \$templatehtml);
 select $SCRIPTOUT;
-ConfigServer::DisplayResellerUI::main(\%FORM, $script, 0, $images, $myv);
+Sentinel::DisplayResellerUI::main(\%FORM, $script, 0, $images, $myv);
 close ($SCRIPTOUT);
 select STDOUT;
 $templatehtml =~ s/\?action\=/?iworxme=/g;

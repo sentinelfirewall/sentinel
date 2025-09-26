@@ -18,25 +18,25 @@
 ###############################################################################
 ## no critic (RequireUseWarnings, ProhibitExplicitReturnUndef, ProhibitMixedBooleanOperators, RequireBriefOpen)
 # start main
-package ConfigServer::RBLLookup;
+package Sentinel::RBLLookup;
 
 use strict;
 use lib '/usr/local/csf/lib';
 use Fcntl qw(:DEFAULT :flock);
 use IPC::Open3;
 use Net::IP;
-use ConfigServer::Config;
-use ConfigServer::CheckIP qw(checkip);
+use Sentinel::Config;
+use Sentinel::CheckIP qw(checkip);
 
 use Exporter qw(import);
 our $VERSION     = 1.01;
 our @ISA         = qw(Exporter);
 our @EXPORT_OK   = qw(rbllookup);
 
-my $config = ConfigServer::Config->loadconfig();
+my $config = Sentinel::Config->loadconfig();
 my %config = $config->config();
-my $ipv4reg = ConfigServer::Config->ipv4reg;
-my $ipv6reg = ConfigServer::Config->ipv6reg;
+my $ipv4reg = Sentinel::Config->ipv4reg;
+my $ipv6reg = Sentinel::Config->ipv6reg;
 
 # end main
 ###############################################################################

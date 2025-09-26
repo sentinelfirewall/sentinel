@@ -26,7 +26,7 @@ class Plugin_Configservercsf extends Plugin
     public function preAction($ctrl_act, Ctrl_Abstract $Ctrl, $action, $params)
     {
         if ($ctrl_act === 'Ctrl_Nodeworx_Firewall:index') {
-            throw new IWorx_Exception_ActionBlocked('ConfigServer Plugins > Security & Firewall, has replaced this item');
+            throw new IWorx_Exception_ActionBlocked('Sentinel Plugins > Security & Firewall, has replaced this item');
         }
 		elseif (strpos($ctrl_act, 'Ctrl_Nodeworx_Firewall') === 0) {
 			throw new IWorx_Exception_ActionBlocked('N/A');
@@ -121,7 +121,7 @@ class Plugin_Configservercsf extends Plugin
 
     public function updateNodeworxMenu(IWorxMenuManager $MenuMan)
     {
-        $new_data = array( 'text' => 'ConfigServer Plugins',
+        $new_data = array( 'text' => 'Sentinel Plugins',
                        'class' => 'iw-i-plugin',
                        'disabled_for_reseller' => '0' );
 

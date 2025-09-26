@@ -18,7 +18,7 @@
 ###############################################################################
 ## no critic (RequireUseWarnings, ProhibitExplicitReturnUndef, ProhibitMixedBooleanOperators, RequireBriefOpen)
 # start main
-package ConfigServer::Messenger;
+package Sentinel::Messenger;
 
 use strict;
 use lib '/usr/local/csf/lib';
@@ -29,26 +29,26 @@ use IO::Socket::INET;
 use Net::CIDR::Lite;
 use Net::IP;
 use IPC::Open3;
-use ConfigServer::Config;
-use ConfigServer::CheckIP qw(checkip);
-use ConfigServer::Logger qw(logfile);
-use ConfigServer::URLGet;
-use ConfigServer::Slurp qw(slurp);
-use ConfigServer::GetIPs qw(getips);
-use ConfigServer::GetEthDev;
+use Sentinel::Config;
+use Sentinel::CheckIP qw(checkip);
+use Sentinel::Logger qw(logfile);
+use Sentinel::URLGet;
+use Sentinel::Slurp qw(slurp);
+use Sentinel::GetIPs qw(getips);
+use Sentinel::GetEthDev;
 
 use Exporter qw(import);
 our $VERSION     = 3.00;
 our @ISA         = qw(Exporter);
 our @EXPORT_OK   = qw();
 
-my $slurpreg = ConfigServer::Slurp->slurpreg;
-my $cleanreg = ConfigServer::Slurp->cleanreg;
+my $slurpreg = Sentinel::Slurp->slurpreg;
+my $cleanreg = Sentinel::Slurp->cleanreg;
 
-my $config = ConfigServer::Config->loadconfig();
+my $config = Sentinel::Config->loadconfig();
 my %config = $config->config();
-my $ipv4reg = ConfigServer::Config->ipv4reg;
-my $ipv6reg = ConfigServer::Config->ipv6reg;
+my $ipv4reg = Sentinel::Config->ipv4reg;
+my $ipv6reg = Sentinel::Config->ipv6reg;
 
 my $childproc;
 my $hostname;
@@ -389,7 +389,7 @@ sub messenger {
 								eval {
 									local $SIG{__DIE__} = undef;
 									eval("no lib '/usr/local/csf/lib'");
-									my $urlget = ConfigServer::URLGet->new(2, "", $config{URLPROXY});
+									my $urlget = Sentinel::URLGet->new(2, "", $config{URLPROXY});
 									my $url = "https://www.google.com/recaptcha/api/siteverify?secret=$config{RECAPTCHA_SECRET}&response=$recv";
 									($status, $text) = $urlget->urlget($url);
 								};
@@ -1085,7 +1085,7 @@ sub childcleanup {
 ###############################################################################
 # start getethdev
 sub getethdev {
-	my $ethdev = ConfigServer::GetEthDev->new();
+	my $ethdev = Sentinel::GetEthDev->new();
 	my %g_ipv4 = $ethdev->ipv4;
 	my %g_ipv6 = $ethdev->ipv6;
 	foreach my $key (keys %g_ipv4) {

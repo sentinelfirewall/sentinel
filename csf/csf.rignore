@@ -26,15 +26,15 @@
 # otherwise permitted)
 #
 # For example, the following are all valid entries:
-# www.configserver.com
-# .configserver.com
-# .configserver.co.uk
+# www.example.net
+# .example.net
+# .example.co.uk
 # .googlebot.com
 # .crawl.yahoo.net
 # .search.msn.com
 #
 # The following are NOT valid entries:
-# *.configserver.com
+# *.example.com
 # *google.com
 # google.com (unless the lookup is EXACTLY google.com with no subdomain
 #

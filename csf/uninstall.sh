@@ -63,8 +63,8 @@ fi
 /bin/rm -fv /usr/local/cpanel/whostmgr/docroot/cgi/configserver/csf.cgi
 /bin/rm -Rfv /usr/local/cpanel/whostmgr/docroot/cgi/configserver/csf
 
-/bin/rm -fv /usr/local/cpanel/Cpanel/Config/ConfigObj/Driver/ConfigServercsf.pm
-/bin/rm -Rfv /usr/local/cpanel/Cpanel/Config/ConfigObj/Driver/ConfigServercsf
+/bin/rm -fv /usr/local/cpanel/Cpanel/Config/ConfigObj/Driver/Sentinelcsf.pm
+/bin/rm -Rfv /usr/local/cpanel/Cpanel/Config/ConfigObj/Driver/Sentinelcsf
 /bin/touch /usr/local/cpanel/Cpanel/Config/ConfigObj/Driver
 
 /bin/rm -fv /var/run/chkservd/lfd

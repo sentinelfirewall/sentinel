@@ -18,12 +18,12 @@
 ###############################################################################
 ## no critic (RequireUseWarnings, ProhibitExplicitReturnUndef, ProhibitMixedBooleanOperators, RequireBriefOpen)
 # start main
-package ConfigServer::Ports;
+package Sentinel::Ports;
 
 use strict;
 use lib '/usr/local/csf/lib';
 use Fcntl qw(:DEFAULT :flock);
-use ConfigServer::Config;
+use Sentinel::Config;
 
 use Exporter qw(import);
 our $VERSION     = 1.02;
@@ -153,7 +153,7 @@ sub listening {
 ###############################################################################
 # start openports
 sub openports {
-	my $config = ConfigServer::Config->loadconfig();
+	my $config = Sentinel::Config->loadconfig();
 	my %config = $config->config();
 	my %ports;
 

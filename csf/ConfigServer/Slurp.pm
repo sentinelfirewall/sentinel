@@ -18,7 +18,7 @@
 ###############################################################################
 ## no critic (RequireUseWarnings, ProhibitExplicitReturnUndef, ProhibitMixedBooleanOperators, RequireBriefOpen)
 # start main
-package ConfigServer::Slurp;
+package Sentinel::Slurp;
 
 use strict;
 use lib '/usr/local/csf/lib';

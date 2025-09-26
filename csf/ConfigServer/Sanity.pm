@@ -18,13 +18,13 @@
 ###############################################################################
 ## no critic (RequireUseWarnings, ProhibitExplicitReturnUndef, ProhibitMixedBooleanOperators, RequireBriefOpen)
 # start main
-package ConfigServer::Sanity;
+package Sentinel::Sanity;
 
 use strict;
 use lib '/usr/local/csf/lib';
 use Fcntl qw(:DEFAULT :flock);
 use Carp;
-use ConfigServer::Config;
+use Sentinel::Config;
 
 use Exporter qw(import);
 our $VERSION     = 1.02;
@@ -46,7 +46,7 @@ foreach my $line (@data) {
 	$sanitydefault{$name} = $def;
 }
 
-my $config = ConfigServer::Config->loadconfig();
+my $config = Sentinel::Config->loadconfig();
 my %config = $config->config();
 
 if ($config{IPSET}) {

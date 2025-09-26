@@ -1,10 +1,10 @@
 .TH csf 1
 .SH NAME
-csf \- ConfigServer & Security Firewall
+csf \- Sentinel & Security Firewall
 .SH SYNOPSIS
 .B csf [OPTIONS]
 .SH DESCRIPTION
-This manual documents the csf command line options for the ConfigServer & Security Firewall. See /etc/csf/csf.conf and /etc/csf/readme.txt for more detailed information on how to use and configure this application.
+This manual documents the csf command line options for the Sentinel & Security Firewall. See /etc/csf/csf.conf and /etc/csf/readme.txt for more detailed information on how to use and configure this application.
 .SH OPTIONS
 .TP
 .B
@@ -279,6 +279,9 @@ The system wide configuration file
 .RS
 Detailed information about csf and lfd
 .SH BUGS
-Report bugs on the forums at http://forum.configserver.com
+Report bugs on github issues: https://github.com/sentinelfirewall/sentinel/issues
 .SH AUTHOR
 (c)2006-2023, Jonathan Michaelson (http://www.configserver.com)
+.SH MAINTAINERS
+(c)2025, Sentinel Project (https://github.com/sentinelfirewall/sentinel)
+

@@ -18,19 +18,19 @@
 ###############################################################################
 ## no critic (RequireUseWarnings, ProhibitExplicitReturnUndef, ProhibitMixedBooleanOperators, RequireBriefOpen)
 # start main
-package ConfigServer::RBLCheck;
+package Sentinel::RBLCheck;
 
 use strict;
 use lib '/usr/local/csf/lib';
 use Fcntl qw(:DEFAULT :flock);
-use ConfigServer::Config;
-use ConfigServer::CheckIP qw(checkip);
-use ConfigServer::Slurp qw(slurp);
-use ConfigServer::GetIPs qw(getips);
-use ConfigServer::RBLLookup qw(rbllookup);
+use Sentinel::Config;
+use Sentinel::CheckIP qw(checkip);
+use Sentinel::Slurp qw(slurp);
+use Sentinel::GetIPs qw(getips);
+use Sentinel::RBLLookup qw(rbllookup);
 use IPC::Open3;
 use Net::IP;
-use ConfigServer::GetEthDev;
+use Sentinel::GetEthDev;
 
 use Exporter qw(import);
 our $VERSION     = 1.01;
@@ -40,8 +40,8 @@ our @EXPORT_OK   = qw();
 my ($ui, $failures, $verbose, $cleanreg, $status, %ips, $images, %config,
 	$ipresult, $output);
 
-my $ipv4reg = ConfigServer::Config->ipv4reg;
-my $ipv6reg = ConfigServer::Config->ipv6reg;
+my $ipv4reg = Sentinel::Config->ipv4reg;
+my $ipv6reg = Sentinel::Config->ipv6reg;
 
 # end main
 ###############################################################################
@@ -50,9 +50,9 @@ sub report {
 	$verbose = shift;
 	$images = shift;
 	$ui = shift;
-	my $config = ConfigServer::Config->loadconfig();
+	my $config = Sentinel::Config->loadconfig();
 	%config = $config->config();
-	$cleanreg = ConfigServer::Slurp->cleanreg;
+	$cleanreg = Sentinel::Slurp->cleanreg;
 	$failures = 0;
 
 	$| = 1;
@@ -232,7 +232,7 @@ sub endoutput {
 ###############################################################################
 # start getethdev
 sub getethdev {
-	my $ethdev = ConfigServer::GetEthDev->new();
+	my $ethdev = Sentinel::GetEthDev->new();
 	my %g_ipv4 = $ethdev->ipv4;
 	my %g_ipv6 = $ethdev->ipv6;
 	foreach my $key (keys %g_ipv4) {

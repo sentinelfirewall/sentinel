@@ -21,7 +21,7 @@
 ###############################################################################
 #
 # chkconfig: 2345 15 80
-# description: ConfigServer Firewall
+# description: Sentinel Firewall
 #
 ### BEGIN INIT INFO
 # Provides:          csf
@@ -30,8 +30,8 @@
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # X-Start-Before:    $syslog
-# Short-Description: ConfigServer Firewall (csf)
-# Description:       ConfigServer Firewall (csf) init script
+# Short-Description: Sentinel Firewall (csf)
+# Description:       Sentinel Firewall (csf) init script
 ### END INIT INFO
 #
 

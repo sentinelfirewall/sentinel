@@ -18,7 +18,7 @@
 ###############################################################################
 ## no critic (RequireUseWarnings, ProhibitExplicitReturnUndef, ProhibitMixedBooleanOperators, RequireBriefOpen)
 # start main
-package ConfigServer::Config;
+package Sentinel::Config;
 
 use strict;
 use lib '/usr/local/csf/lib';
@@ -26,7 +26,7 @@ use version;
 use Fcntl qw(:DEFAULT :flock);
 use Carp;
 use IPC::Open3;
-use ConfigServer::Slurp qw(slurp);
+use Sentinel::Slurp qw(slurp);
 
 use Exporter qw(import);
 our $VERSION     = 1.05;
@@ -41,8 +41,8 @@ my %configsetting;
 my $warning;
 my $version;
 
-my $slurpreg = ConfigServer::Slurp->slurpreg;
-my $cleanreg = ConfigServer::Slurp->cleanreg;
+my $slurpreg = Sentinel::Slurp->slurpreg;
+my $cleanreg = Sentinel::Slurp->cleanreg;
 my $configfile = "/etc/csf/csf.conf";
 
 # end main

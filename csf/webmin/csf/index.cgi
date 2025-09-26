@@ -25,12 +25,12 @@ use Fcntl qw(:DEFAULT :flock);
 use Sys::Hostname qw(hostname);
 use IPC::Open3;
 use lib '/usr/local/csf/lib';
-use ConfigServer::DisplayUI;
-use ConfigServer::Config;
+use Sentinel::DisplayUI;
+use Sentinel::Config;
 
 our ($script, $images, $myv, %FORM, %in);
 
-my $config = ConfigServer::Config->loadconfig();
+my $config = Sentinel::Config->loadconfig();
 my %config = $config->config;
 
 open (my $IN, "<", "/etc/csf/version.txt") or die $!;
@@ -103,7 +103,7 @@ unless ($FORM{action} eq "tailcmd" or $FORM{action} =~ /^cf/ or $FORM{action} eq
 	print "<!doctype html>\n";
 	print "<html lang='en' $htmltag>\n";
 	print "<head>\n";
-	print "	<title>ConfigServer Security &amp; Firewall</title>\n";
+	print "	<title>Sentinel Security &amp; Firewall</title>\n";
 	print "	<meta charset='utf-8'>\n";
 	print "	<meta name='viewport' content='width=device-width, initial-scale=1'>\n";
 	print "	$bootstrapcss\n";
@@ -136,11 +136,11 @@ unless ($FORM{action} eq "tailcmd" or $FORM{action} =~ /^cf/ or $FORM{action} eq
 	print "<a id='toplink' class='toplink' title='Go to bottom'><span class='glyphicon glyphicon-hand-down'></span></a>\n";
 	print "<div class='container-fluid'>\n";
 	print "<div class='panel panel-default'>\n";
-	print "<h4><img src='$images/csf_small.png' style='padding-left: 10px'> ConfigServer Security &amp; Firewall - csf v$myv</h4>\n";
+	print "<h4><img src='$images/csf_small.png' style='padding-left: 10px'> Sentinel Security &amp; Firewall - csf v$myv</h4>\n";
 	print "</div>\n";
 }
 
-ConfigServer::DisplayUI::main(\%FORM, $script, 0, $images, $myv);
+Sentinel::DisplayUI::main(\%FORM, $script, 0, $images, $myv);
 
 unless ($FORM{action} eq "tailcmd" or $FORM{action} =~ /^cf/ or $FORM{action} eq "logtailcmd" or $FORM{action} eq "loggrepcmd") {
 	print "<a class='botlink' id='botlink' title='Go to top'><span class='glyphicon glyphicon-hand-up'></span></a>\n";

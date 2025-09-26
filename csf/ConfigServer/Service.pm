@@ -18,21 +18,21 @@
 ###############################################################################
 ## no critic (RequireUseWarnings, ProhibitExplicitReturnUndef, ProhibitMixedBooleanOperators, RequireBriefOpen)
 # start main
-package ConfigServer::Service;
+package Sentinel::Service;
 
 use strict;
 use lib '/usr/local/csf/lib';
 use Carp;
 use IPC::Open3;
 use Fcntl qw(:DEFAULT :flock);
-use ConfigServer::Config;
+use Sentinel::Config;
 
 use Exporter qw(import);
 our $VERSION     = 1.01;
 our @ISA         = qw(Exporter);
 our @EXPORT_OK   = qw();
 
-my $config = ConfigServer::Config->loadconfig();
+my $config = Sentinel::Config->loadconfig();
 my %config = $config->config();
 
 open (my $IN, "<", "/proc/1/comm");

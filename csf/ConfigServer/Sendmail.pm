@@ -18,22 +18,22 @@
 ###############################################################################
 ## no critic (RequireUseWarnings, ProhibitExplicitReturnUndef, ProhibitMixedBooleanOperators, RequireBriefOpen)
 # start main
-package ConfigServer::Sendmail;
+package Sentinel::Sendmail;
 
 use strict;
 use lib '/usr/local/csf/lib';
 use Carp;
 use POSIX qw(strftime);
 use Fcntl qw(:DEFAULT :flock);
-use ConfigServer::Config;
-use ConfigServer::CheckIP qw(checkip);
+use Sentinel::Config;
+use Sentinel::CheckIP qw(checkip);
 
 use Exporter qw(import);
 our $VERSION     = 1.02;
 our @ISA         = qw(Exporter);
 our @EXPORT_OK   = qw();
 
-my $config = ConfigServer::Config->loadconfig();
+my $config = Sentinel::Config->loadconfig();
 my %config = $config->config();
 my $tz = strftime("%z", localtime);
 my $hostname;

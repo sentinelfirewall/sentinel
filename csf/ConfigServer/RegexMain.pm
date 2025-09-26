@@ -18,16 +18,16 @@
 ###############################################################################
 ## no critic (RequireUseWarnings, ProhibitExplicitReturnUndef, ProhibitMixedBooleanOperators, RequireBriefOpen)
 # start main
-package ConfigServer::RegexMain;
+package Sentinel::RegexMain;
 
 use strict;
 use lib '/usr/local/csf/lib';
 use IPC::Open3;
-use ConfigServer::Config;
-use ConfigServer::CheckIP qw(checkip);
-use ConfigServer::Slurp qw(slurp);
-use ConfigServer::Logger qw(logfile);
-use ConfigServer::GetEthDev;
+use Sentinel::Config;
+use Sentinel::CheckIP qw(checkip);
+use Sentinel::Slurp qw(slurp);
+use Sentinel::Logger qw(logfile);
+use Sentinel::GetEthDev;
 
 use Exporter qw(import);
 our $VERSION     = 1.03;
@@ -36,11 +36,11 @@ our @EXPORT_OK   = qw();
 
 our (%config, %cpconfig, $slurpreg, $cleanreg, %globlogs, %brd, %ips);
 
-my $config = ConfigServer::Config->loadconfig();
+my $config = Sentinel::Config->loadconfig();
 %config = $config->config;
 
-$slurpreg = ConfigServer::Slurp->slurpreg;
-$cleanreg = ConfigServer::Slurp->cleanreg;
+$slurpreg = Sentinel::Slurp->slurpreg;
+$cleanreg = Sentinel::Slurp->cleanreg;
 
 if (-e "/etc/wwwacct.conf") {
 	foreach my $line (slurp("/etc/wwwacct.conf")) {
@@ -77,9 +77,9 @@ if ($config{LF_APACHE_ERRPORT} == 0) {
 	}
 }
 unless ($config{LF_APACHE_ERRPORT} == 1) {$config{LF_APACHE_ERRPORT} = 2}
-ConfigServer::Logger::logfile("LF_APACHE_ERRPORT: Set to [$config{LF_APACHE_ERRPORT}]");
+Sentinel::Logger::logfile("LF_APACHE_ERRPORT: Set to [$config{LF_APACHE_ERRPORT}]");
 
-my $ethdev = ConfigServer::GetEthDev->new();
+my $ethdev = Sentinel::GetEthDev->new();
 %brd = $ethdev->brd;
 %ips = $ethdev->ipv4;
 
@@ -847,7 +847,7 @@ sub pslinecheck {
 					if ($hit) {last}
 				}
 				if ($hit) {
-					if ($config{DEBUG} >= 1) {ConfigServer::Logger::logfile("debug: *Port Scan* ignored TCP_IN port: $ip:$port")}
+					if ($config{DEBUG} >= 1) {Sentinel::Logger::logfile("debug: *Port Scan* ignored TCP_IN port: $ip:$port")}
 					return;
 				}
 			}
@@ -861,7 +861,7 @@ sub pslinecheck {
 					if ($hit) {last}
 				}
 				if ($hit) {
-					if ($config{DEBUG} >= 1) {ConfigServer::Logger::logfile("debug: *Port Scan* ignored UDP_IN port: $ip:$port")}
+					if ($config{DEBUG} >= 1) {Sentinel::Logger::logfile("debug: *Port Scan* ignored UDP_IN port: $ip:$port")}
 					return;
 				}
 			}

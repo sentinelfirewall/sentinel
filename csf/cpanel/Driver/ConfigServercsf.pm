@@ -1,8 +1,8 @@
-package Cpanel::Config::ConfigObj::Driver::ConfigServercsf;
+package Cpanel::Config::ConfigObj::Driver::Sentinelcsf;
 
 use strict;
-use Cpanel::Config::ConfigObj::Driver::ConfigServercsf::META ();
-*VERSION = \$Cpanel::Config::ConfigObj::Driver::ConfigServercsf::META::VERSION;
+use Cpanel::Config::ConfigObj::Driver::Sentinelcsf::META ();
+*VERSION = \$Cpanel::Config::ConfigObj::Driver::Sentinelcsf::META::VERSION;
 
 #use parent qw(Cpanel::Config::ConfigObj::Interface::Config::v1);
 our @ISA = qw(Cpanel::Config::ConfigObj::Interface::Config::v1);    
@@ -10,11 +10,11 @@ our @ISA = qw(Cpanel::Config::ConfigObj::Interface::Config::v1);
 sub init {
     my ( $class, $software_obj ) = @_;
 
-    my $ConfigServercsf_defaults = {
-        'thirdparty_ns' => "ConfigServercsf",
+    my $Sentinelcsf_defaults = {
+        'thirdparty_ns' => "Sentinelcsf",
         'meta'          => {},
     };
-    my $self = $class->SUPER::base( $ConfigServercsf_defaults, $software_obj );
+    my $self = $class->SUPER::base( $Sentinelcsf_defaults, $software_obj );
 
     return $self;
 }
@@ -39,10 +39,10 @@ sub info {
 sub acl_desc {
     return [
         {
-            'acl'              => 'software-ConfigServer-csf',       #this should be "software-$key"
+            'acl'              => 'software-Sentinel-csf',       #this should be "software-$key"
             'default_value'    => 0,
             'default_ui_value' => 0,                        # NOTE: this is for ui; first time setting reseller privs
-            'name'             => 'ConfigServer Security & Firewall (Reseller UI)',
+            'name'             => 'Sentinel Security & Firewall (Reseller UI)',
             'acl_subcat'       => 'Third Party Services',
         },
     ];

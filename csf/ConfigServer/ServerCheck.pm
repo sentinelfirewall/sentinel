@@ -18,20 +18,20 @@
 ###############################################################################
 ## no critic (RequireUseWarnings, ProhibitExplicitReturnUndef, ProhibitMixedBooleanOperators, RequireBriefOpen)
 # start main
-package ConfigServer::ServerCheck;
+package Sentinel::ServerCheck;
 
 use strict;
 use lib '/usr/local/csf/lib';
 use Fcntl qw(:DEFAULT :flock);
 use File::Basename;
 use IPC::Open3;
-use ConfigServer::Slurp qw(slurp);
-use ConfigServer::Sanity qw(sanity);;
-use ConfigServer::Config;
-use ConfigServer::GetIPs qw(getips);
-use ConfigServer::CheckIP qw(checkip);
-use ConfigServer::Service;
-use ConfigServer::GetEthDev;
+use Sentinel::Slurp qw(slurp);
+use Sentinel::Sanity qw(sanity);;
+use Sentinel::Config;
+use Sentinel::GetIPs qw(getips);
+use Sentinel::CheckIP qw(checkip);
+use Sentinel::Service;
+use Sentinel::GetEthDev;
 
 use Exporter qw(import);
 our $VERSION     = 1.05;
@@ -42,8 +42,8 @@ my (%config, $cpconf, %daconfig, $cleanreg, $mypid, $childin, $childout,
     $verbose, $cpurl, @processes, $total, $failures, $current, $DEBIAN,
 	$output, $sysinit, %g_ifaces, %g_ipv4, %g_ipv6);
 
-my $ipv4reg = ConfigServer::Config->ipv4reg;
-my $ipv6reg = ConfigServer::Config->ipv6reg;
+my $ipv4reg = Sentinel::Config->ipv4reg;
+my $ipv6reg = Sentinel::Config->ipv6reg;
 
 use Exporter qw(import);
 # end main
@@ -51,9 +51,9 @@ use Exporter qw(import);
 # start report
 sub report {
 	$verbose = shift;
-	my $config = ConfigServer::Config->loadconfig();
+	my $config = Sentinel::Config->loadconfig();
 	%config = $config->config();
-	$cleanreg = ConfigServer::Slurp->cleanreg;
+	$cleanreg = Sentinel::Slurp->cleanreg;
 	$| = 1;
 
 	if (defined $ENV{WEBMIN_VAR} and defined $ENV{WEBMIN_CONFIG}) {
@@ -90,7 +90,7 @@ sub report {
 	$DEBIAN = 0;
 	if (-e "/etc/lsb-release" or -e "/etc/debian_version") {$DEBIAN = 1}
 
-	$sysinit = ConfigServer::Service::type();
+	$sysinit = Sentinel::Service::type();
 	if ($sysinit ne "systemd") {$sysinit = "init"}
 
 	opendir (PROCDIR, "/proc");
@@ -99,7 +99,7 @@ sub report {
 		push @processes, readlink("/proc/$pid/exe");
 	}
 
-	my $ethdev = ConfigServer::GetEthDev->new();
+	my $ethdev = Sentinel::GetEthDev->new();
 	%g_ifaces = $ethdev->ifaces;
 	%g_ipv4 = $ethdev->ipv4;
 	%g_ipv6 = $ethdev->ipv6;
@@ -259,7 +259,7 @@ sub firewallcheck {
 
 	$status = 0;
 	unless ($config{AUTO_UPDATES}) {$status = 1}
-	&addline($status,"AUTO_UPDATES option check","To keep csf up to date and secure you should enable AUTO_UPDATES. You should also monitor our <a href='http://blog.configserver.com' target='_blank'>blog</a>");
+	&addline($status,"AUTO_UPDATES option check","To keep csf up to date and secure you should enable AUTO_UPDATES. You should also monitor <a href='https://github.com/sentinelfirewall/sentinel/releases' target='_blank'>github releases</a>");
 
 	$status = 0;
 	unless ($config{LF_DAEMON}) {$status = 1}
@@ -484,19 +484,6 @@ sub servercheck {
 		if (($uid == 0) and ($name ne "root")) {$status = 1}
 	}
 	&addline($status,"Check SUPERUSER accounts","You have accounts other than root set up with UID 0. This is a considerable security risk. You should use <b>su</b>, or best of all <b>sudo</b> for such access");
-
-	if (-e "/usr/local/cpanel/version" or $config{DIRECTADMIN}) {
-		$status = 0;
-		unless (-e "/etc/cxs/cxs.pl") {
-			$status = 1;
-		}
-		&addline($status,"Check for cxs","You should consider using <b><u><a href='http://www.configserver.com/cp/cxs.html' target='_blank'>cxs</a></u></b> to scan web script uploads and user accounts for exploits uploaded to the server");
-		$status = 0;
-		unless (-e "/etc/osm/osmd.pl") {
-			$status = 1;
-		}
-		&addline($status,"Check for osm","You should consider using <b><u><a href='http://www.configserver.com/cp/osm.html' target='_blank'>osm</a></u></b> to provide protection from spammers exploiting the server");
-	}
 
 	unless ($config{IPV6}) {
 		$status = 0;

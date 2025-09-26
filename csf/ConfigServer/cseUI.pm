@@ -17,7 +17,7 @@
 # this program; if not, see <https://www.gnu.org/licenses>.
 ###############################################################################
 ## no critic (RequireUseWarnings, ProhibitExplicitReturnUndef, ProhibitMixedBooleanOperators, RequireBriefOpen)
-package ConfigServer::cseUI;
+package Sentinel::cseUI;
 
 use strict;
 use Fcntl qw(:DEFAULT :flock);
@@ -72,7 +72,7 @@ sub main {
 <!doctype html>
 <html lang='en'>
 <head>
-	<title>ConfigServer Explorer</title>
+	<title>Sentinel Explorer</title>
 	<meta charset='utf-8'>
 	<meta name='viewport' content='width=device-width, initial-scale=1'>
 	$bootstrapcss
@@ -97,7 +97,7 @@ EOF
 		print "</div>\n";
 		print <<EOF;
 <div class='panel panel-default panel-body'>
-<h4><span class="glyphicon glyphicon-folder-open icon-configserver"></span> ConfigServer Explorer - cse</h4>
+<h4><span class="glyphicon glyphicon-folder-open icon-configserver"></span> Sentinel Explorer - cse</h4>
 </div>
 EOF
 	}
@@ -132,7 +132,7 @@ EOF
 	else {print "Invalid action"};
 
 	unless ($FORM{do} eq "console") {
-		print "<p>&copy;2006-2023, <a href='http://www.configserver.com' target='_blank'>ConfigServer Services</a> (Jonathan Michaelson)</p>\n";
+		print "<p>&copy;2025, <a href='https://github.com/sentinelfirewall/sentinel' target='_blank'>Sentinel Project</a> (2006-2025 Jonathan Michaelson)</p>\n";
 	}
 	print <<EOF;
 </div>

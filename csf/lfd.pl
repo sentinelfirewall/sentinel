@@ -27,18 +27,18 @@ use IPC::Open3;
 use Net::CIDR::Lite;
 use POSIX qw(:sys_wait_h sysconf strftime setsid);
 use Socket;
-use ConfigServer::Config;
-use ConfigServer::Slurp qw(slurp);
-use ConfigServer::CheckIP qw(checkip cccheckip);
-use ConfigServer::URLGet;
-use ConfigServer::GetIPs qw(getips);
-use ConfigServer::Service;
-use ConfigServer::AbuseIP qw(abuseip);
-use ConfigServer::GetEthDev;
-use ConfigServer::Sendmail;
-use ConfigServer::Logger qw(logfile);
-use ConfigServer::KillSSH;
-use ConfigServer::LookUpIP qw(iplookup);
+use Sentinel::Config;
+use Sentinel::Slurp qw(slurp);
+use Sentinel::CheckIP qw(checkip cccheckip);
+use Sentinel::URLGet;
+use Sentinel::GetIPs qw(getips);
+use Sentinel::Service;
+use Sentinel::AbuseIP qw(abuseip);
+use Sentinel::GetEthDev;
+use Sentinel::Sendmail;
+use Sentinel::Logger qw(logfile);
+use Sentinel::KillSSH;
+use Sentinel::LookUpIP qw(iplookup);
 
 umask(0177);
 
@@ -84,22 +84,22 @@ if (-e "/etc/csf/csf.error") {
 	exit 1;
 }
 
-my $config = ConfigServer::Config->loadconfig();
+my $config = Sentinel::Config->loadconfig();
 %config = $config->config();
 my %configsetting = $config->configsetting();
 $ipv4reg = $config->ipv4reg;
 $ipv6reg = $config->ipv6reg;
-$slurpreg = ConfigServer::Slurp->slurpreg;
-$cleanreg = ConfigServer::Slurp->cleanreg;
+$slurpreg = Sentinel::Slurp->slurpreg;
+$cleanreg = Sentinel::Slurp->cleanreg;
 
 unless ($config{LF_DAEMON}) {&cleanup(__LINE__,"*Error* LF_DAEMON not enabled in /etc/csf/csf.conf")}
 if ($config{TESTING}) {&cleanup(__LINE__,"*Error* lfd will not run with TESTING enabled in /etc/csf/csf.conf")}
 
 if ($config{UI}) {
-	require ConfigServer::DisplayUI;
-	import ConfigServer::DisplayUI;
-	require ConfigServer::cseUI;
-	import ConfigServer::cseUI;
+	require Sentinel::DisplayUI;
+	import Sentinel::DisplayUI;
+	require Sentinel::cseUI;
+	import Sentinel::cseUI;
 	eval {
 		local $SIG{__DIE__} = undef;
 		require IO::Socket::SSL;
@@ -133,18 +133,18 @@ if ($config{CLUSTER_SENDTO} or $config{CLUSTER_RECVFROM}) {
 	import IO::Socket::INET;
 }
 if ($config{MESSENGER}) {
-	require ConfigServer::Messenger;
-	import ConfigServer::Messenger;
+	require Sentinel::Messenger;
+	import Sentinel::Messenger;
 }
 if ($config{CF_ENABLE}) {
-	require ConfigServer::CloudFlare;
-	import ConfigServer::CloudFlare;
+	require Sentinel::CloudFlare;
+	import Sentinel::CloudFlare;
 }
-if (-e "/etc/cxs/cxs.reputation" and -e "/usr/local/csf/lib/ConfigServer/cxs.pm") {
-	require ConfigServer::cxs;
-	import ConfigServer::cxs;
+if (-e "/etc/cxs/cxs.reputation" and -e "/usr/local/csf/lib/Sentinel/cxs.pm") {
+	require Sentinel::cxs;
+	import Sentinel::cxs;
 	$cxsreputation = 1;
-	%cxsports = ConfigServer::cxs::Rports();
+	%cxsports = Sentinel::cxs::Rports();
 }
 $SIG{CHLD} = 'IGNORE';
 
@@ -218,16 +218,16 @@ $faststart = 0;
 
 eval {
 	local $SIG{__DIE__} = undef;
-	$urlget = ConfigServer::URLGet->new($config{URLGET}, "csf/$version", $config{URLPROXY});
+	$urlget = Sentinel::URLGet->new($config{URLGET}, "csf/$version", $config{URLPROXY});
 };
 unless (defined $urlget) {
 	if (-e $config{CURL} or -e $config{WGET}) {
 		$config{URLGET} = 3;
-		$urlget = ConfigServer::URLGet->new($config{URLGET}, "csf/$version", $config{URLPROXY});
+		$urlget = Sentinel::URLGet->new($config{URLGET}, "csf/$version", $config{URLPROXY});
 		logfile("*WARNING* URLGET set to use LWP but perl module is not installed, fallback to using CURL/WGET");
 	} else {
 		$config{URLGET} = 1;
-		$urlget = ConfigServer::URLGet->new($config{URLGET}, "csf/$version", $config{URLPROXY});
+		$urlget = Sentinel::URLGet->new($config{URLGET}, "csf/$version", $config{URLPROXY});
 		logfile("*WARNING* URLGET set to use LWP but perl module is not installed, CURL and WGET not installed - reverting to HTTP::Tiny");
 	}
 }
@@ -279,7 +279,7 @@ unless (-e $config{SENDMAIL}) {
 	logfile("*WARNING* Unable to send email reports - [$config{SENDMAIL}] not found");
 }
 
-if (ConfigServer::Service::type() eq "systemd") {
+if (Sentinel::Service::type() eq "systemd") {
 	my @reply = &syscommand(__LINE__,$config{SYSTEMCTL},"is-active","firewalld");
 	chomp @reply;
 	if ($reply[0] eq "active" or $reply[0] eq "activating") {
@@ -288,8 +288,8 @@ if (ConfigServer::Service::type() eq "systemd") {
 	}
 }
 
-require ConfigServer::RegexMain;
-import ConfigServer::RegexMain;
+require Sentinel::RegexMain;
+import Sentinel::RegexMain;
 
 if ($config{RESTRICT_SYSLOG} == 1) {
 	logfile("Restricted log file access (RESTRICT_SYSLOG)");
@@ -608,7 +608,7 @@ if ($config{MESSENGER}) {
 			logfile($config{MESSENGER_HTTPS_DISABLED});
 		}
 		if ($config{MESSENGERV3}) {
-			$messenger3 = ConfigServer::Messenger->init(3);
+			$messenger3 = Sentinel::Messenger->init(3);
 			if (-e "/var/cpanel/users/$config{MESSENGER_USER}") {
 				logfile("*MESSENGERV3* - Cannot run service using a cPanel account:[$config{MESSENGER_USER}], MESSENGER service disabled");
 				$config{MESSENGER} = 0;
@@ -627,7 +627,7 @@ if ($config{MESSENGER}) {
 			}
 		}
 		elsif ($config{MESSENGERV2}) {
-			$messenger2 = ConfigServer::Messenger->init(2);
+			$messenger2 = Sentinel::Messenger->init(2);
 			if (-e "/var/cpanel/users/$config{MESSENGER_USER}") {
 				logfile("*MESSENGERV2* - Cannot run service using a cPanel account:[$config{MESSENGER_USER}], MESSENGER service disabled");
 				$config{MESSENGER} = 0;
@@ -646,7 +646,7 @@ if ($config{MESSENGER}) {
 			}
 		}
 		else {
-			$messenger1 = ConfigServer::Messenger->init(1);
+			$messenger1 = Sentinel::Messenger->init(1);
 			if ($config{MESSENGER_HTTPS_IN} ne "") {
 				foreach my $port (split(/\,/,$config{MESSENGER_HTTPS_IN})) {$messengerports{$port} = 1}
 				logfile("Messenger HTTPS Service starting...");
@@ -660,7 +660,7 @@ if ($config{MESSENGER}) {
 		}
 		if ($config{MESSENGER_TEXT_IN} ne "") {
 			unless (defined $messenger1) {
-				$messenger1 = ConfigServer::Messenger->init(1);
+				$messenger1 = Sentinel::Messenger->init(1);
 			}
 			foreach my $port (split(/\,/,$config{MESSENGER_TEXT_IN})) {$messengerports{$port} = 1}
 			logfile("Messenger TEXT Service starting...");
@@ -678,7 +678,7 @@ if ($config{MESSENGER}) {
 if ($config{UI}) {
 	if ($config{UI_CXS}) {
 	use lib '/etc/cxs';
-	require ConfigServer::cxsUI;
+	require Sentinel::cxsUI;
 	}
 	if ($config{UI_USER} eq "" or $config{UI_USER} eq "username") {
 		logfile("*Error* Cannot run csf Integrated UI - UI_USER must set");
@@ -1694,7 +1694,7 @@ sub dochecks {
 	my $timenow = time;
 	my $logscanner_skip = 0;
 
-	my ($reason, $ip, $app, $customtrigger, $customports, $customperm, $customcf) = ConfigServer::RegexMain::processline ($line,$lgfile,\%globlogs);
+	my ($reason, $ip, $app, $customtrigger, $customports, $customperm, $customcf) = Sentinel::RegexMain::processline ($line,$lgfile,\%globlogs);
 
 	my ($gip,$account,$domain) = split (/\|/,$ip,3);
 	unless ($account =~ /^[a-zA-Z0-9\-\_\.\@\%\+]+$/) {
@@ -1802,7 +1802,7 @@ sub dochecks {
 						delete $db{$ip};
 					}
 					if ($cxsreputation) {
-						ConfigServer::cxs::Rreport($trigger,$ip,"$reason $ip - $hits failure(s) in the last $config{LF_INTERVAL} secs",$trigger);
+						Sentinel::cxs::Rreport($trigger,$ip,"$reason $ip - $hits failure(s) in the last $config{LF_INTERVAL} secs",$trigger);
 					}
 					$0 = "lfd - scanning $lgfile";
 				}
@@ -1833,7 +1833,7 @@ sub dochecks {
 	}
 
 	if ($config{LF_DISTFTP} and ($globlogs{FTPD_LOG}{$lgfile})) {
-		my ($ip, $account) = ConfigServer::RegexMain::processdistftpline ($line);
+		my ($ip, $account) = Sentinel::RegexMain::processdistftpline ($line);
 		unless ($account =~ /^[a-zA-Z0-9\-\_\.\@\%\+]+$/) {
 			if ($account and $config{DEBUG} >= 1) {logfile("debug: (processdistftpline) Account name [$account] is invalid")}
 			$account = "";
@@ -1866,7 +1866,7 @@ sub dochecks {
 	}
 
 	if ($config{LF_DISTSMTP} and ($globlogs{SMTPAUTH_LOG}{$lgfile})) {
-		my ($ip, $account) = ConfigServer::RegexMain::processdistsmtpline ($line);
+		my ($ip, $account) = Sentinel::RegexMain::processdistsmtpline ($line);
 		unless ($account =~ /^[a-zA-Z0-9\-\_\.\@\%\+]+$/) {
 			if ($account and $config{DEBUG} >= 1) {logfile("debug: (processdistsmtpline) Account name [$account] is invalid")}
 			$account = "";
@@ -1899,7 +1899,7 @@ sub dochecks {
 	}
 
 	if ($config{LF_APACHE_404} and ($globlogs{HTACCESS_LOG}{$lgfile})) {
-		my ($ip) = ConfigServer::RegexMain::loginline404($line);
+		my ($ip) = Sentinel::RegexMain::loginline404($line);
 		if ($ip and !&ignoreip($ip)) {
 			$apache404{$ip}{count}++;
 			$apache404{$ip}{text} .= "$line\n";
@@ -1911,7 +1911,7 @@ sub dochecks {
 	}
 
 	if ($config{LF_APACHE_403} and ($globlogs{HTACCESS_LOG}{$lgfile})) {
-		my ($ip) = ConfigServer::RegexMain::loginline403($line);
+		my ($ip) = Sentinel::RegexMain::loginline403($line);
 		if ($ip and !&ignoreip($ip)) {
 			$apache403{$ip}{count}++;
 			$apache403{$ip}{text} .= "$line\n";
@@ -1923,7 +1923,7 @@ sub dochecks {
 	}
 
 	if ($config{LF_APACHE_401} and ($globlogs{HTACCESS_LOG}{$lgfile})) {
-		my ($ip) = ConfigServer::RegexMain::loginline401($line);
+		my ($ip) = Sentinel::RegexMain::loginline401($line);
 		if ($ip and !&ignoreip($ip)) {
 			$apache401{$ip}{count}++;
 			$apache401{$ip}{text} .= "$line\n";
@@ -1935,7 +1935,7 @@ sub dochecks {
 	}
 
 	if (($config{LT_POP3D} or $config{LT_IMAPD}) and (($globlogs{POP3D_LOG}{$lgfile}) or ($globlogs{IMAPD_LOG}{$lgfile}))) {
-		my ($app, $account, $ip) = ConfigServer::RegexMain::processloginline ($line);
+		my ($app, $account, $ip) = Sentinel::RegexMain::processloginline ($line);
 		unless ($account =~ /^[a-zA-Z0-9\-\_\.\@\%\+]+$/) {
 			if ($account and $config{DEBUG} >= 1) {logfile("debug: (processloginline) Account name [$account] is invalid")}
 			$account = "";
@@ -1953,7 +1953,7 @@ sub dochecks {
 	}
 
 	if ($config{LF_SSH_EMAIL_ALERT} and (($lgfile eq "/var/log/messages") or ($lgfile eq "/var/log/secure") or ($lgfile eq "/var/log/auth.log") or ($globlogs{SSHD_LOG}{$lgfile}))) {
-		my ($account, $ip, $method) = ConfigServer::RegexMain::processsshline ($line);
+		my ($account, $ip, $method) = Sentinel::RegexMain::processsshline ($line);
 		unless ($account =~ /^[a-zA-Z0-9\-\_\.\@\%\+]+$/) {
 			if ($account and $config{DEBUG} >= 1) {logfile("debug: (processsshline) Account name [$account] is invalid")}
 			$account = "";
@@ -1965,28 +1965,28 @@ sub dochecks {
 	}
 
 	if ($config{LF_SU_EMAIL_ALERT} and (($lgfile eq "/var/log/messages") or ($lgfile eq "/var/log/secure") or ($lgfile eq "/var/log/auth.log") or ($globlogs{SU_LOG}{$lgfile}))) {
-		my ($to, $from, $status) = ConfigServer::RegexMain::processsuline ($line);
+		my ($to, $from, $status) = Sentinel::RegexMain::processsuline ($line);
 		if (($to and $from) and ($from ne "root") and ($from ne 'root(uid=0)') and ($from ne '(uid=0)')) {
 			&sualert($to, $from, $status, $line);
 		}
 	}
 
 	if ($config{LF_SUDO_EMAIL_ALERT} and (($lgfile eq "/var/log/messages") or ($lgfile eq "/var/log/secure") or ($lgfile eq "/var/log/auth.log") or ($globlogs{SUDO_LOG}{$lgfile}))) {
-		my ($to, $from, $status) = ConfigServer::RegexMain::processsudoline ($line);
+		my ($to, $from, $status) = Sentinel::RegexMain::processsudoline ($line);
 		if (($to and $from) and ($from ne "root") and ($from ne 'root(uid=0)') and ($from ne '(uid=0)')) {
 			&sudoalert($to, $from, $status, $line);
 		}
 	}
 
 	if ($config{LF_CONSOLE_EMAIL_ALERT} and (($lgfile eq "/var/log/messages") or ($lgfile eq "/var/log/secure") or ($lgfile eq "/var/log/auth.log") or ($globlogs{SU_LOG}{$lgfile}))) {
-		my ($status) = ConfigServer::RegexMain::processconsoleline ($line);
+		my ($status) = Sentinel::RegexMain::processconsoleline ($line);
 		if ($status) {
 			&consolealert($line);
 		}
 	}
 
 	if ($config{LF_CPANEL_ALERT} and ($globlogs{CPANEL_ACCESSLOG}{$lgfile})) {
-		my ($ip,$user) = ConfigServer::RegexMain::processcpanelline ($line);
+		my ($ip,$user) = Sentinel::RegexMain::processcpanelline ($line);
 		unless ($user =~ /^[a-zA-Z0-9\-\_\.\@\%\+]+$/) {
 			if ($user and $config{DEBUG} >= 1) {logfile("debug: (processcpanelline) Account name [$user] is invalid")}
 			$user = "";
@@ -2002,14 +2002,14 @@ sub dochecks {
 	}
 
 	if ($config{LF_WEBMIN_EMAIL_ALERT} and ($globlogs{WEBMIN_LOG}{$lgfile})) {
-		my ($account, $ip) = ConfigServer::RegexMain::processwebminline ($line);
+		my ($account, $ip) = Sentinel::RegexMain::processwebminline ($line);
 		if ($account) {
 			&webminalert($account,$ip, $line);
 		}
 	}
 
 	if ($config{LF_SCRIPT_ALERT} and ($globlogs{SCRIPT_LOG}{$lgfile})) {
-		my $path = ConfigServer::RegexMain::scriptlinecheck($line);
+		my $path = Sentinel::RegexMain::scriptlinecheck($line);
 		if ($path ne "") {
 			$scripts{$path}{cnt}++;
 			if ($scripts{$path}{cnt} <= 10) {
@@ -2023,7 +2023,7 @@ sub dochecks {
 	}
 
 	if ($config{PS_INTERVAL} and ($globlogs{IPTABLES_LOG}{$lgfile})) {
-		my ($ip, $port) = ConfigServer::RegexMain::pslinecheck($line);
+		my ($ip, $port) = Sentinel::RegexMain::pslinecheck($line);
 		if ($port and $ip and !&ignoreip($ip)) {
 			my $hit = 0;
 			foreach my $ports (split(/\,/,$config{PS_PORTS})) {
@@ -2060,7 +2060,7 @@ sub dochecks {
 	}
 
 	if ($config{UID_INTERVAL} and ($globlogs{IPTABLES_LOG}{$lgfile})) {
-		my ($port, $uid) = ConfigServer::RegexMain::uidlinecheck($line);
+		my ($port, $uid) = Sentinel::RegexMain::uidlinecheck($line);
 		if ($port and $uid and !$uidignore{$uid}) {
 			my $hit = 0;
 			foreach my $ports (split(/\,/,$config{UID_PORTS})) {
@@ -2086,13 +2086,13 @@ sub dochecks {
 	}
 
 	if ($config{ST_ENABLE} and ($globlogs{IPTABLES_LOG}{$lgfile})) {
-		if (ConfigServer::RegexMain::statscheck($line)) {
+		if (Sentinel::RegexMain::statscheck($line)) {
 			&stats($line,"iptables");
 		}
 	}
 
 	if ($config{SYSLOG_CHECK} and $sys_syslog and $syslogcheckcode and ($globlogs{SYSLOG_LOG}{$lgfile})) {
-		if (ConfigServer::RegexMain::syslogcheckline($line,$syslogcheckcode)) {
+		if (Sentinel::RegexMain::syslogcheckline($line,$syslogcheckcode)) {
 			if ($config{DEBUG} >= 2) {logfile("debug: SYSLOG_CHECK match [$syslogcheckcode]")}
 			$syslogcheckcode = "";
 			$logscanner_skip = 1;
@@ -2100,7 +2100,7 @@ sub dochecks {
 	}
 
 	if ($config{PORTKNOCKING} and $config{PORTKNOCKING_ALERT} and ($globlogs{IPTABLES_LOG}{$lgfile})) {
-		my ($ip, $port) = ConfigServer::RegexMain::portknockingcheck($line);
+		my ($ip, $port) = Sentinel::RegexMain::portknockingcheck($line);
 		if ($port and $ip and !&ignoreip($ip)) {
 			&portknocking($ip, $port);
 		}
@@ -2134,7 +2134,7 @@ sub dochecks {
 	}
 
 	if ((($config{RT_RELAY_ALERT} or $config{RT_AUTHRELAY_ALERT} or $config{RT_POPRELAY_ALERT} or $config{RT_LOCALRELAY_ALERT} or $config{RT_LOCALHOSTRELAY_ALERT})) and ($globlogs{SMTPRELAY_LOG}{$lgfile})) {
-		my ($ip,$check) = ConfigServer::RegexMain::relaycheck($line);
+		my ($ip,$check) = Sentinel::RegexMain::relaycheck($line);
 		if ($ip) {
 			if ($check eq "RELAY" and !$relays{$ip}{check}) {
 				open (my $RELAYHOSTS, "<", "/etc/relayhosts");
@@ -2245,7 +2245,7 @@ sub getlogfile {
 				$line =~ s/\[text\]/$text/ig;
 				push @message, $line;
 			}
-			ConfigServer::Sendmail::relay("", "", @message);
+			Sentinel::Sendmail::relay("", "", @message);
 		}
 		if (&openlogfile($logfile,$lfn)) {return undef}
 	    return "reopen";
@@ -2518,7 +2518,7 @@ sub block {
 			&cloudflare("deny",$ip,$config{CF_BLOCK},$domains);
 			$cfid = " (CF_ENABLE)";
 		}
-		if ($config{PT_SSHDKILL} and $logapps{sshd}) {ConfigServer::KillSSH::find($ip,$ports{sshd})}
+		if ($config{PT_SSHDKILL} and $logapps{sshd}) {Sentinel::KillSSH::find($ip,$ports{sshd})}
 
 		my $blocked = 0;
 		if ($config{LF_SELECT} and !$config{LF_TRIGGER}) {
@@ -2552,7 +2552,7 @@ sub block {
 					$line =~ s/\[text\]/$text/ig;
 					push @message, $line;
 				}
-				ConfigServer::Sendmail::relay("", "", @message);
+				Sentinel::Sendmail::relay("", "", @message);
 
 				if ($config{DEBUG} >= 1) {logfile("debug: alert email sent for $ip")}
 			}
@@ -2601,7 +2601,7 @@ sub block {
 					$line =~ s/\[RFC3339\]/$rfc3339/ig;
 					push @message, $line;
 				}
-				ConfigServer::Sendmail::relay($config{LF_ALERT_TO}, $config{LF_ALERT_FROM}, @message);
+				Sentinel::Sendmail::relay($config{LF_ALERT_TO}, $config{LF_ALERT_FROM}, @message);
 
 				if ($config{DEBUG} >= 1) {logfile("debug: X-ARF email sent for $ip")}
 			}
@@ -2646,7 +2646,7 @@ sub blockaccount {
 		foreach my $ip (@ips) {
 			$0 = "lfd - (child) blocking $ip";
 
-			if ($config{PT_SSHDKILL} and $app eq "sshd") {ConfigServer::KillSSH::find($ip,$ports{sshd})}
+			if ($config{PT_SSHDKILL} and $app eq "sshd") {Sentinel::KillSSH::find($ip,$ports{sshd})}
 
 			my $tip = iplookup($ip);
 			if ($config{LF_SELECT} and !$config{LF_TRIGGER}) {
@@ -2660,7 +2660,7 @@ sub blockaccount {
 			}
 			$text .= "$tip\n";
 			if ($cxsreputation) {
-				ConfigServer::cxs::Rreport($trigger,$ip,"$ipcount distributed $trigger attacks in the last $config{LF_INTERVAL} secs",$trigger);
+				Sentinel::cxs::Rreport($trigger,$ip,"$ipcount distributed $trigger attacks in the last $config{LF_INTERVAL} secs",$trigger);
 			}
 		}
 
@@ -2678,7 +2678,7 @@ sub blockaccount {
 				$line =~ s/\[text\]/$text/ig;
 				push @message, $line;
 			}
-			ConfigServer::Sendmail::relay("", "", @message);
+			Sentinel::Sendmail::relay("", "", @message);
 		}
 
 		if ($config{DEBUG} >= 3) {$timer = &timer("stop","blockaccount",$timer)}
@@ -2733,7 +2733,7 @@ sub blockdistftp {
 				$line =~ s/\[text\]/$text/ig;
 				push @message, $line;
 			}
-			ConfigServer::Sendmail::relay("", "", @message);
+			Sentinel::Sendmail::relay("", "", @message);
 		}
 
 		if ($config{LF_DIST_ACTION} and -e $config{LF_DIST_ACTION} and -x $config{LF_DIST_ACTION}) {
@@ -2793,7 +2793,7 @@ sub blockdistsmtp {
 				$line =~ s/\[text\]/$text/ig;
 				push @message, $line;
 			}
-			ConfigServer::Sendmail::relay("", "", @message);
+			Sentinel::Sendmail::relay("", "", @message);
 		}
 
 		if ($config{LF_DIST_ACTION} and -e $config{LF_DIST_ACTION} and -x $config{LF_DIST_ACTION}) {
@@ -2844,7 +2844,7 @@ sub disable404 {
 					$line =~ s/\[text\]/$text/ig;
 					push @message, $line;
 				}
-				ConfigServer::Sendmail::relay("", "", @message);
+				Sentinel::Sendmail::relay("", "", @message);
 			}
 		}
 
@@ -2891,7 +2891,7 @@ sub disable403 {
 					$line =~ s/\[text\]/$text/ig;
 					push @message, $line;
 				}
-				ConfigServer::Sendmail::relay("", "", @message);
+				Sentinel::Sendmail::relay("", "", @message);
 			}
 		}
 
@@ -2938,7 +2938,7 @@ sub disable401 {
 					$line =~ s/\[text\]/$text/ig;
 					push @message, $line;
 				}
-				ConfigServer::Sendmail::relay("", "", @message);
+				Sentinel::Sendmail::relay("", "", @message);
 			}
 		}
 
@@ -2992,7 +2992,7 @@ sub logindisable {
 					$line =~ s/\[rate\]/$loginproto{$app}/ig;
 					push @message, $line;
 				}
-				ConfigServer::Sendmail::relay("", "", @message);
+				Sentinel::Sendmail::relay("", "", @message);
 
 				logfile("tracking email sent for $account");
 			}
@@ -3044,7 +3044,7 @@ sub portscans {
 					$line =~ s/\[temp\]/$block/ig;
 					push @message, $line;
 				}
-				ConfigServer::Sendmail::relay("", "", @message);
+				Sentinel::Sendmail::relay("", "", @message);
 				if ($config{DEBUG} >= 1) {logfile("debug: alert email sent for $ip")}
 
 				if ($config{X_ARF}) {
@@ -3091,7 +3091,7 @@ sub portscans {
 						$line =~ s/\[RFC3339\]/$rfc3339/ig;
 						push @message, $line;
 					}
-					ConfigServer::Sendmail::relay($config{LF_ALERT_TO}, $config{LF_ALERT_FROM}, @message);
+					Sentinel::Sendmail::relay($config{LF_ALERT_TO}, $config{LF_ALERT_FROM}, @message);
 
 					if ($config{DEBUG} >= 1) {logfile("debug: X-ARF email sent for $ip")}
 				}
@@ -3135,7 +3135,7 @@ sub uidscans {
 			$line =~ s/\[ports\]/$blocks/ig;
 			push @message, $line;
 		}
-		ConfigServer::Sendmail::relay("", "", @message);
+		Sentinel::Sendmail::relay("", "", @message);
 		if ($config{DEBUG} >= 1) {logfile("debug: alert email sent for UID $uid ($user)")}
 
 		if ($config{DEBUG} >= 3) {$timer = &timer("stop","uidscans",$timer)}
@@ -3251,7 +3251,7 @@ sub csfcheck {
 						flock ($THISLOCK, LOCK_EX | LOCK_NB) or &childcleanup("*Lock Error* [$lockstr] still active - section skipped");
 						print $THISLOCK time;
 
-						logfile("cPanel upgrade detected, restarting ConfigServer services...");
+						logfile("cPanel upgrade detected, restarting Sentinel services...");
 
 						if (-e "/var/lib/csf/cpanel.new") {unlink "/var/lib/csf/cpanel.new"}
 						open (my $CPANELNEW, ">", "/var/lib/csf/cpanel.new");
@@ -3433,7 +3433,7 @@ sub loadcheck {
 				$line =~ s/\[boundary\]/$boundary/ig;
 				push @message, $line;
 			}
-			ConfigServer::Sendmail::relay("", "", @message);
+			Sentinel::Sendmail::relay("", "", @message);
 		}
 
 		close ($THISLOCK );
@@ -3553,7 +3553,7 @@ sub queuecheck {
 				$line =~ s/\[text\]/$report/ig;
 				push @message, $line;
 			}
-			ConfigServer::Sendmail::relay("", "", @message);
+			Sentinel::Sendmail::relay("", "", @message);
 		}
 
 		close ($THISLOCK );
@@ -3613,7 +3613,7 @@ sub modsecipdbcheck {
 				$line =~ s/\[text\]/$report/ig;
 				push @message, $line;
 			}
-			ConfigServer::Sendmail::relay("", "", @message);
+			Sentinel::Sendmail::relay("", "", @message);
 		}
 
 		close ($THISLOCK );
@@ -3758,7 +3758,7 @@ sub connectiontracking {
 							$line =~ s/\[temp\]/$block/ig;
 							push @message, $line;
 						}
-						ConfigServer::Sendmail::relay("", "", @message);
+						Sentinel::Sendmail::relay("", "", @message);
 
 						if ($config{X_ARF}) {
 							$0 = "lfd - (child) sending X-ARF email for $ip";
@@ -3804,7 +3804,7 @@ sub connectiontracking {
 								$line =~ s/\[RFC3339\]/$rfc3339/ig;
 								push @message, $line;
 							}
-							ConfigServer::Sendmail::relay($config{LF_ALERT_TO}, $config{LF_ALERT_FROM}, @message);
+							Sentinel::Sendmail::relay($config{LF_ALERT_TO}, $config{LF_ALERT_FROM}, @message);
 
 							if ($config{DEBUG} >= 1) {logfile("debug: CT X-ARF email sent for $ip")}
 						}
@@ -3842,7 +3842,7 @@ sub connectiontracking {
 							$line =~ s/\[temp\]/$block/ig;
 							push @message, $line;
 						}
-						ConfigServer::Sendmail::relay("", "", @message);
+						Sentinel::Sendmail::relay("", "", @message);
 
 						if ($config{DEBUG} >= 1) {logfile("debug: CT alert email sent for $fullsubnet")}
 					}
@@ -3925,7 +3925,7 @@ sub accounttracking {
 				$line =~ s/\[report\]/$report/ig;
 				push @message, $line;
 			}
-			ConfigServer::Sendmail::relay("", "", @message);
+			Sentinel::Sendmail::relay("", "", @message);
 		}			
 
 		close ($THISLOCK );
@@ -3963,7 +3963,7 @@ sub syslogcheck {
 			$line =~ s/\[log\]/$config{SYSLOG_LOG}/ig;
 			push @message, $line;
 		}
-		ConfigServer::Sendmail::relay("", "", @message);
+		Sentinel::Sendmail::relay("", "", @message);
 
 		close ($THISLOCK );
 		if ($config{DEBUG} >= 3) {$timer = &timer("stop","syslogcheck",$timer)}
@@ -4227,7 +4227,7 @@ sub processtracking {
 								$line =~ s/\[text\]/$text/ig;
 								push @message, $line;
 							}
-							ConfigServer::Sendmail::relay("", "", @message);
+							Sentinel::Sendmail::relay("", "", @message);
 							next;
 						}
 					}
@@ -4331,7 +4331,7 @@ sub processtracking {
 							$line =~ s/\[cmdline\]/$cmdline/ig;
 							push @message, $line;
 						}
-						ConfigServer::Sendmail::relay("", "", @message);
+						Sentinel::Sendmail::relay("", "", @message);
 
 						if ($deleted and $config{PT_DELETED_ACTION} and -e "$config{PT_DELETED_ACTION}" and -x "$config{PT_DELETED_ACTION}") {
 							$SIG{CHLD} = 'IGNORE';
@@ -4379,7 +4379,7 @@ sub processtracking {
 							$line =~ s/\[kill\]/$kill/ig;
 							push @message, $line;
 						}
-						ConfigServer::Sendmail::relay("", "", @message);
+						Sentinel::Sendmail::relay("", "", @message);
 					}
 					if ($config{PT_USER_ACTION} and -e "$config{PT_USER_ACTION}" and -x "$config{PT_USER_ACTION}") {
 						$SIG{CHLD} = 'IGNORE';
@@ -4445,7 +4445,7 @@ sub processtracking {
 							$line =~ s/\[pid\]/$pid (Parent PID:$procres{$pid}{ppid})/ig;
 							push @message, $line;
 						}
-						ConfigServer::Sendmail::relay("", "", @message);
+						Sentinel::Sendmail::relay("", "", @message);
 					}
 
 					if ($config{PT_USER_ACTION} and -e "$config{PT_USER_ACTION}" and -x "$config{PT_USER_ACTION}") {
@@ -4500,7 +4500,7 @@ sub sshalert {
 			$line =~ s/\[text\]/$text/ig;
 			push @message, $line;
 		}
-		ConfigServer::Sendmail::relay("", "", @message);
+		Sentinel::Sendmail::relay("", "", @message);
 
 		if ($config{DEBUG} >= 3) {$timer = &timer("stop","sshalert",$timer)}
 		$0 = "lfd - child closing";
@@ -4538,7 +4538,7 @@ sub sualert {
 			$line =~ s/\[text\]/$text/ig;
 			push @message, $line;
 		}
-		ConfigServer::Sendmail::relay("", "", @message);
+		Sentinel::Sendmail::relay("", "", @message);
 
 		if ($config{DEBUG} >= 3) {$timer = &timer("stop","sualert",$timer)}
 		$0 = "lfd - child closing";
@@ -4576,7 +4576,7 @@ sub sudoalert {
 			$line =~ s/\[text\]/$text/ig;
 			push @message, $line;
 		}
-		ConfigServer::Sendmail::relay("", "", @message);
+		Sentinel::Sendmail::relay("", "", @message);
 
 		if ($config{DEBUG} >= 3) {$timer = &timer("stop","sudoalert",$timer)}
 		$0 = "lfd - child closing";
@@ -4613,7 +4613,7 @@ sub webminalert {
 			$line =~ s/\[text\]/$text/ig;
 			push @message, $line;
 		}
-		ConfigServer::Sendmail::relay("", "", @message);
+		Sentinel::Sendmail::relay("", "", @message);
 
 		if ($config{DEBUG} >= 3) {$timer = &timer("stop","webminalert",$timer)}
 		$0 = "lfd - child closing";
@@ -4645,7 +4645,7 @@ sub consolealert {
 			$line =~ s/\[line\]/$logline/ig;
 			push @message, $line;
 		}
-		ConfigServer::Sendmail::relay("", "", @message);
+		Sentinel::Sendmail::relay("", "", @message);
 
 		if ($config{DEBUG} >= 3) {$timer = &timer("stop","consolealert",$timer)}
 		$0 = "lfd - child closing";
@@ -4682,7 +4682,7 @@ sub cpanelalert {
 			$line =~ s/\[text\]/$text/ig;
 			push @message, $line;
 		}
-		ConfigServer::Sendmail::relay("", "", @message);
+		Sentinel::Sendmail::relay("", "", @message);
 
 		if ($config{LF_CPANEL_ALERT_ACTION} and -e "$config{LF_CPANEL_ALERT_ACTION}" and -x "$config{LF_CPANEL_ALERT_ACTION}") {
 			$0 = "lfd - (child) running LF_CPANEL_ALERT_ACTION";
@@ -4761,7 +4761,7 @@ sub scriptalert {
 			$line =~ s/\[scripts\]/$files/ig;
 			push @message, $line;
 		}
-		ConfigServer::Sendmail::relay("", "", @message);
+		Sentinel::Sendmail::relay("", "", @message);
 
 		if ($config{LF_SCRIPT_ACTION} and -e $config{LF_SCRIPT_ACTION} and -x $config{LF_SCRIPT_ACTION}) {
 			$0 = "lfd - (child) running LF_SCRIPT_ACTION";
@@ -4838,7 +4838,7 @@ sub relayalert {
 			$line =~ s/\[emails\]/$mails/ig;
 			push @message, $line;
 		}
-		ConfigServer::Sendmail::relay("", "", @message);
+		Sentinel::Sendmail::relay("", "", @message);
 
 		if ($config{RT_ACTION} and -e "$config{RT_ACTION}" and -x "$config{RT_ACTION}") {
 			$0 = "lfd - (child) running RT_ACTION";
@@ -4878,7 +4878,7 @@ sub portknocking {
 			$line =~ s/\[port\]/$port/ig;
 			push @message, $line;
 		}
-		ConfigServer::Sendmail::relay("", "", @message);
+		Sentinel::Sendmail::relay("", "", @message);
 
 		if ($config{DEBUG} >= 3) {$timer = &timer("stop","portknocking",$timer)}
 		$0 = "lfd - child closing";
@@ -7185,7 +7185,7 @@ sub dirwatch {
 							$line =~ s/\[action\]/Too many hits for \*LF_DIRWATCH\* - Directory Watching disabled/ig;
 							push @message, $line;
 						}
-						ConfigServer::Sendmail::relay("", "", @message);
+						Sentinel::Sendmail::relay("", "", @message);
 						
 						exit;
 					}
@@ -7221,7 +7221,7 @@ sub dirwatch {
 						$line =~ s/\[action\]/$action/ig;
 						push @message, $line;
 					}
-					ConfigServer::Sendmail::relay("", "", @message);
+					Sentinel::Sendmail::relay("", "", @message);
 
 					if (! $config{LF_DIRWATCH_DISABLE}) {
 						sysopen (my $TEMPFILES, "/var/lib/csf/csf.tempfiles", O_WRONLY | O_APPEND | O_CREAT) or &childcleanup(__LINE__,"*Error* Cannot append out file: $!");
@@ -7397,7 +7397,7 @@ sub dirwatchfile {
 						$line =~ s/\[output\]/$output/ig;
 						push @message, $line;
 					}
-					ConfigServer::Sendmail::relay("", "", @message);
+					Sentinel::Sendmail::relay("", "", @message);
 				}
 			} else {
 				$dirwatchfile{$file} = $md5sum;
@@ -7497,7 +7497,7 @@ sub integrity {
 						$line =~ s/\[text\]/$report/ig;
 						push @message, $line;
 					}
-					ConfigServer::Sendmail::relay("", "", @message);
+					Sentinel::Sendmail::relay("", "", @message);
 					unlink "/var/lib/csf/csf.tempint";
 
 					eval {
@@ -7602,7 +7602,7 @@ sub logscanner {
 				$line =~ s/\[hour\]/$hour/ig;
 				push @message, $line;
 			}
-			ConfigServer::Sendmail::relay("", "", @message);
+			Sentinel::Sendmail::relay("", "", @message);
 
 			if ($config{DEBUG} >= 1) {logfile("LOGSCANNER report sent")}
 		}
@@ -7661,7 +7661,7 @@ sub exploit {
 				$line =~ s/\[text\]/$report/ig;
 				push @message, $line;
 			}
-			ConfigServer::Sendmail::relay("", "", @message);
+			Sentinel::Sendmail::relay("", "", @message);
 			unlink "/var/lib/csf/csf.tempexp";
 		}
 
@@ -7676,7 +7676,7 @@ sub exploit {
 ###############################################################################
 # start getethdev
 sub getethdev {
-	my $ethdev = ConfigServer::GetEthDev->new();
+	my $ethdev = Sentinel::GetEthDev->new();
 	my %g_ifaces = $ethdev->ifaces;
 	my %g_ipv4 = $ethdev->ipv4;
 	my %g_ipv6 = $ethdev->ipv6;
@@ -8486,7 +8486,7 @@ sub ipblock {
 						$line =~ s/\[ips\]/$ntext/ig;
 						push @message, $line;
 					}
-					ConfigServer::Sendmail::relay("", "", @message);
+					Sentinel::Sendmail::relay("", "", @message);
 				}
 
 				$ip = $ipblock;
@@ -8521,7 +8521,7 @@ sub ipblock {
 						$line =~ s/\[blocks\]/$ptext/ig;
 						push @message, $line;
 					}
-					ConfigServer::Sendmail::relay("", "", @message);
+					Sentinel::Sendmail::relay("", "", @message);
 				}
 				$perm = 1;
 				$blocked = 1;
@@ -8878,10 +8878,10 @@ sub cloudflare {
 		$0 = "lfd - (child) CloudFlare $action...";
 
 		if ($action eq "remove") {
-			ConfigServer::CloudFlare::action("remove",$ip,$mode);
+			Sentinel::CloudFlare::action("remove",$ip,$mode);
 		}
 		elsif ($action eq "deny") {
-			ConfigServer::CloudFlare::action("deny",$ip,$config{CF_BLOCK},"",$domains,1);
+			Sentinel::CloudFlare::action("deny",$ip,$config{CF_BLOCK},"",$domains,1);
 		}
 
 		if ($config{DEBUG} >= 3) {$timer = &timer("stop","cloudflare",$timer)}
@@ -9183,7 +9183,7 @@ sub messengerrecaptcha {
 							$line =~ s/\[host\]/$host ($hostip)/ig;
 							push @message, $line;
 						}
-						ConfigServer::Sendmail::relay("", "", @message);
+						Sentinel::Sendmail::relay("", "", @message);
 
 						if ($config{DEBUG} >= 1) {logfile("debug: recaptcha email sent for $unblockip")}
 					}
@@ -9540,7 +9540,7 @@ sub ui {
 								$line =~ s/\[text\]/Login attempt from local IP address $tip - denied/ig;
 								push @message, $line;
 							}
-							ConfigServer::Sendmail::relay("", "", @message);
+							Sentinel::Sendmail::relay("", "", @message);
 						}
 						close ($client);
 						alarm(0);
@@ -9567,7 +9567,7 @@ sub ui {
 										$line =~ s/\[text\]/Access attempt from a banned IP $tip in \/etc\/csf\/ui\/ui\.ban - denied/ig;
 										push @message, $line;
 									}
-									ConfigServer::Sendmail::relay("", "", @message);
+									Sentinel::Sendmail::relay("", "", @message);
 								}
 								close ($client);
 								alarm(0);
@@ -9611,7 +9611,7 @@ sub ui {
 									$line =~ s/\[text\]/Access attempt from an IP $tip not in \/etc\/csf\/ui\/ui\.allow - denied/ig;
 									push @message, $line;
 								}
-								ConfigServer::Sendmail::relay("", "", @message);
+								Sentinel::Sendmail::relay("", "", @message);
 							}
 							close ($client);
 							alarm(0);
@@ -9830,7 +9830,7 @@ sub ui {
 									$line =~ s/\[text\]/Login failure from IP address $tip \[$fails{$peeraddress}\/$config{UI_RETRY}] - $text/ig;
 									push @message, $line;
 								}
-								ConfigServer::Sendmail::relay("", "", @message);
+								Sentinel::Sendmail::relay("", "", @message);
 							}
 							&ui_403;
 							close ($client);
@@ -9853,7 +9853,7 @@ sub ui {
 									$line =~ s/\[text\]/Login failure from IP address $tip \[$fails{$peeraddress}\/$config{UI_RETRY}] - denied/ig;
 									push @message, $line;
 								}
-								ConfigServer::Sendmail::relay("", "", @message);
+								Sentinel::Sendmail::relay("", "", @message);
 							}
 						}
 					}
@@ -9895,7 +9895,7 @@ sub ui {
 								$line =~ s/\[text\]/Login success from IP address $tip/ig;
 								push @message, $line;
 							}
-							ConfigServer::Sendmail::relay("", "", @message);
+							Sentinel::Sendmail::relay("", "", @message);
 						}
 					}
 					if ($valid eq "login") {
@@ -9903,7 +9903,7 @@ sub ui {
 						print "Content-type: text/html\r\n";
 						print "\r\n";
 						print "<!DOCTYPE html>\n";
-						print "<HTML>\n<TITLE>ConfigServer Security & Firewall</TITLE>\n<BODY style='font-family:Arial, Helvetica, sans-serif;' onload='document.getElementById(\"user\").focus()'>\n";
+						print "<HTML>\n<TITLE>Sentinel Security & Firewall</TITLE>\n<BODY style='font-family:Arial, Helvetica, sans-serif;' onload='document.getElementById(\"user\").focus()'>\n";
 						if ($valid eq "failed") {print "<div align='center'><h2>Login Failed</h2></div>\n"}
 						print "<form action='/' method='post'><div align='center'>\n";
 						print "<table align='center' border='0' cellspacing='0' cellpadding='4' bgcolor='#FFFFFF' style='border:1px solid #990000'>\n";
@@ -9979,7 +9979,7 @@ sub ui {
 <!doctype html>
 <html lang='en' $htmltag>
 <head>
-<title>ConfigServer Security &amp; Firewall</title>
+<title>Sentinel Security &amp; Firewall</title>
 <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 $bootstrapcss
@@ -10029,12 +10029,12 @@ EOF
 									print "</div>\n";
 									print <<EOF;
 <div class='panel panel-default panel-body'>
-<img align='absmiddle' src='$images/csf_small.png' alt='ConfigServer Firewall &amp; Security' style='float:left'>
-<h3>ConfigServer Security &amp; Firewall - csf v$myv</h3>
+<img align='absmiddle' src='$images/csf_small.png' alt='Sentinel Firewall &amp; Security' style='float:left'>
+<h3>Sentinel Security &amp; Firewall - csf v$myv</h3>
 </div>
 EOF
 								}
-								ConfigServer::DisplayUI::main(\%FORM, $script, 0, $images, $myv, $config{THIS_UI});
+								Sentinel::DisplayUI::main(\%FORM, $script, 0, $images, $myv, $config{THIS_UI});
 								unless ($FORM{action} eq "tailcmd" or $FORM{action} =~ /^cf/ or $FORM{action} eq "logtailcmd" or $FORM{action} eq "loggrepcmd") {
 									print <<EOF;
 <a class='botlink' id='botlink' title='Go to top'><span class='glyphicon glyphicon-hand-up'></span></a>
@@ -10163,7 +10163,7 @@ EOF
 <!doctype html>
 <html lang='en'>
 <head>
-<title>ConfigServer eXploit Scanner</title>
+<title>Sentinel eXploit Scanner</title>
 <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 $bootstrapcss
@@ -10189,8 +10189,8 @@ EOF
 										print "</div>\n";
 										print <<EOF;
 <div class='panel panel-default panel-body'>
-<img align='absmiddle' src='$images/cxs_small.png' alt='ConfigServer eXploit Scanner' style='float:left'>
-<h3>ConfigServer eXploit Scanner - cxs v$myv</h3>
+<img align='absmiddle' src='$images/cxs_small.png' alt='Sentinel eXploit Scanner' style='float:left'>
+<h3>Sentinel eXploit Scanner - cxs v$myv</h3>
 </div>
 EOF
 									} else {
@@ -10213,7 +10213,7 @@ pre {
 EOF
 									}
 								}
-								ConfigServer::cxsUI::displayUI(\%FORM,\%ajaxsubs,$script,"",$images,$myv, "cpsess".$session);
+								Sentinel::cxsUI::displayUI(\%FORM,\%ajaxsubs,$script,"",$images,$myv, "cpsess".$session);
 
 								unless ($ajaxsubs{$FORM{action}}) {
 									print <<EOF;
@@ -10229,7 +10229,7 @@ EOF
 								$script = "/$session/";
 								$images = "/$session/images";
 								$config{THIS_UI} = 1;
-								ConfigServer::cseUI::main(\%FORM, $fileinc, $script, 0, $images, $myv, $config{THIS_UI});
+								Sentinel::cseUI::main(\%FORM, $fileinc, $script, 0, $images, $myv, $config{THIS_UI});
 							}
 						}
 						elsif ($file =~ /^\/images\/(\w+\/)?(\w+\/)?(\w+\/)?([\w\-]+\.(gif|png|jpg|[\w\-]+\.js|[\w\-]+\.css|css|[\w\-]+\.woff2|woff2|[\w\-]+\.woff|woff|[\w\-]+\.tff|tff))/i) {

@@ -18,7 +18,7 @@
 ###############################################################################
 ## no critic (RequireUseWarnings, ProhibitExplicitReturnUndef, ProhibitMixedBooleanOperators, RequireBriefOpen)
 # start main
-package ConfigServer::ServerStats;
+package Sentinel::ServerStats;
 
 use strict;
 use lib '/usr/local/csf/lib';

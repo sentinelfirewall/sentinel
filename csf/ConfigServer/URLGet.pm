@@ -18,25 +18,25 @@
 ###############################################################################
 ## no critic (RequireUseWarnings, ProhibitExplicitReturnUndef, ProhibitMixedBooleanOperators, RequireBriefOpen)
 # start main
-package ConfigServer::URLGet;
+package Sentinel::URLGet;
 
 use strict;
 use lib '/usr/local/csf/lib';
 use Fcntl qw(:DEFAULT :flock);
 use Carp;
 use IPC::Open3;
-use ConfigServer::Config;
+use Sentinel::Config;
 
 use Exporter qw(import);
 our $VERSION     = 2.00;
 our @ISA         = qw(Exporter);
 our @EXPORT_OK   = qw();
 
-my $agent = "ConfigServer";
+my $agent = "Sentinel";
 my $option = 1;
 my $proxy = "";
 
-my $config = ConfigServer::Config->loadconfig();
+my $config = Sentinel::Config->loadconfig();
 my %config = $config->config();
 $SIG{PIPE} = 'IGNORE';
 

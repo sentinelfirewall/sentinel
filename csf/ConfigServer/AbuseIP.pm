@@ -18,15 +18,15 @@
 ###############################################################################
 ## no critic (RequireUseWarnings, ProhibitExplicitReturnUndef, ProhibitMixedBooleanOperators, RequireBriefOpen)
 # start main
-package ConfigServer::AbuseIP;
+package Sentinel::AbuseIP;
 
 use strict;
 use lib '/usr/local/csf/lib';
 use Carp;
 use IPC::Open3;
 use Net::IP;
-use ConfigServer::Config;
-use ConfigServer::CheckIP qw(checkip);
+use Sentinel::Config;
+use Sentinel::CheckIP qw(checkip);
 
 use Exporter qw(import);
 our $VERSION     = 1.03;
@@ -41,7 +41,7 @@ https://abusix.com/global-reporting/abuse-contact-db
 
 abusix.com is neither responsible nor liable for the content or accuracy of this message.';
 
-my $config = ConfigServer::Config->loadconfig();
+my $config = Sentinel::Config->loadconfig();
 my %config = $config->config();
 
 # end main

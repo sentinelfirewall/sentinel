@@ -18,7 +18,7 @@
 ###############################################################################
 ## no critic (RequireUseWarnings, ProhibitExplicitReturnUndef, ProhibitMixedBooleanOperators, RequireBriefOpen)
 # start main
-package ConfigServer::LookUpIP;
+package Sentinel::LookUpIP;
 
 use strict;
 use lib '/usr/local/csf/lib';
@@ -28,24 +28,24 @@ use IPC::Open3;
 use JSON::Tiny;
 use Net::IP;
 use Socket;
-use ConfigServer::CheckIP qw(checkip);
-use ConfigServer::Config;
-use ConfigServer::URLGet;
+use Sentinel::CheckIP qw(checkip);
+use Sentinel::Config;
+use Sentinel::URLGet;
 
 use Exporter qw(import);
 our $VERSION     = 2.00;
 our @ISA         = qw(Exporter);
 our @EXPORT_OK   = qw(iplookup);
 
-my $config = ConfigServer::Config->loadconfig();
+my $config = Sentinel::Config->loadconfig();
 my %config = $config->config();
 
 my $urlget;
 if ($config{CC_LOOKUPS} == 4) {
-	$urlget = ConfigServer::URLGet->new($config{URLGET}, "", $config{URLPROXY});
+	$urlget = Sentinel::URLGet->new($config{URLGET}, "", $config{URLPROXY});
 	unless (defined $urlget) {
 		$config{URLGET} = 1;
-		$urlget = ConfigServer::URLGet->new($config{URLGET}, "", $config{URLPROXY});
+		$urlget = Sentinel::URLGet->new($config{URLGET}, "", $config{URLPROXY});
 	}
 }
 

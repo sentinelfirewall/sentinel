@@ -1,6 +1,6 @@
-                        <a href="#" title="ConfigServer Services">
+                        <a href="#" title="Sentinel Services">
                             <i class="glyph-icon icon-bug"></i>
-                            <span>ConfigServer Services</span>
+                            <span>Sentinel Services</span>
                         </a>
                         <div class="sidebar-submenu">
 
@@ -8,13 +8,13 @@
 							{% url 'configservercsf' as the_url %}
 							{% if the_url %}
                                 <li><a href="{% url 'configservercsf' %}"
-                                       title="ConfigServer Security &amp; Firewall"><span>ConfigServer Security &amp; Firewall</span></a>
+                                       title="Sentinel Security &amp; Firewall"><span>Sentinel Security &amp; Firewall</span></a>
                                 </li>
 							{% endif %}
 							{% url 'configservercxs' as the_url %}
 							{% if the_url %}
                                 <li><a href="{% url 'configservercxs' %}"
-                                       title="ConfigServer Exploit Scanner"><span>ConfigServer Exploit Scanner</span></a>
+                                       title="Sentinel Exploit Scanner"><span>Sentinel Exploit Scanner</span></a>
                                 </li>
 							{% endif %}
                             </ul>
