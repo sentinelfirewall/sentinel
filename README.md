@@ -4,11 +4,11 @@
 
 Luckily, *Way to the Web Limited* released the CSF script under the [GPL license](LICENSE.txt).
 
-Soon after, a group of us SysAdmins have started Sentinel project — a fork of CSF that will be actively maintained, community-driven, and fully compatible as a drop-in replacement for existing servers.
+Soon after, a group of us SysAdmins have started Sentinel project — a fork of CSF that is actively maintained, community-driven, and fully compatible as a drop-in replacement for existing servers.
 
 🔧 The mission:
 * Keep the features that made CSF indispensable
-* Actively patch, improve, and adapt it to modern needs
+* Actively patch, improve, and adapt it to modern needs (ipsets to nfset, iptbales to nftables..)
 * Build a sustainable, open project for the community
 
 If you’ve relied on CSF in your day-to-day work, this is your chance to shape its future. We’re looking for developers, testers, sysadmins, writers, designers — anyone passionate about keeping servers secure.
