@@ -4,7 +4,7 @@
 
 Luckily, *Way to the Web Limited* released the CSF script under the [GPL license](LICENSE.txt).
 
-Soon after, a group of us SysAdmins have started Sentinel project — a fork of CSF that is actively maintained, community-driven, and fully compatible as a drop-in replacement for existing servers.
+Soon after, a group of us [SysAdmins](https://github.com/orgs/sentinelfirewall/people) have started Sentinel project — a fork of CSF that is actively maintained, community-driven, and fully compatible as a drop-in replacement for existing servers.
 
 🔧 The mission:
 * Keep the features that made CSF indispensable
