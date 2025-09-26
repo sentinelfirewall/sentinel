@@ -2,9 +2,8 @@
 #
 ###############################################################################
 # lfd
-# Copyright (C) 2006-2025 Jonathan Michaelson
-#
-# https://github.com/waytotheweb/scripts
+# Copyright (C) 2025 Sentinel Project (https://github.com/sentinelfirewall/sentinel)
+# Copyright (C) 2006-2025 Jonathan Michaelson (https://github.com/waytotheweb/scripts)
 #
 # This program is free software; you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
