@@ -21,7 +21,7 @@ If you’ve relied on CSF in your day-to-day work, this is your chance to shape 
 ## 📥 Installation
 one-liner:
 ```
-cd /root && wget https://github.com/sentinelfirewall/sentinel/raw/refs/heads/main/csf.tgz && tar -xzf csf.tgz && cd csf && ./install.sh
+cd /root && wget https://github.com/sentinelfirewall/sentinel/raw/refs/heads/main/csf.tgz && tar -xzf csf.tgz && cd csf && sh install.sh
 ```
 
 manually:
@@ -29,7 +29,7 @@ manually:
 wget https://github.com/sentinelfirewall/sentinel/raw/refs/heads/main/csf.tgz
 tar -xzf csf.tgz
 cd csf
-./install.sh
+sh install.sh
 ```
 
 ## Upgrade from CSF
