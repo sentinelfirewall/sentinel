@@ -446,15 +446,6 @@ cp -avf cpanel/Driver /usr/local/cpanel/whostmgr/docroot/cgi/configserver/csf/
 cp -avf ui/images/icon.gif /usr/local/cpanel/whostmgr/docroot/themes/x/icons/csf.gif
 cp -avf cpanel/csf.tmpl /usr/local/cpanel/whostmgr/docroot/templates/
 
-VERSION=`cat /usr/local/cpanel/version | cut -d '.' -f2`
-if [ "$VERSION" -lt "65" ]; then
-    sed -i "s/^target=.*$/target=mainFrame/" cpanel/csf.conf
-    echo "cPanel v$VERSION, target set to mainFrame"
-else
-    sed -i "s/^target=.*$/target=_self/" cpanel/csf.conf
-    echo "cPanel v$VERSION, target set to _self"
-fi
-
 cp -avf cpanel/csf.conf /usr/local/cpanel/whostmgr/docroot/cgi/configserver/csf/csf.conf
 cp -avf cpanel/upgrade.sh /usr/local/cpanel/whostmgr/docroot/cgi/configserver/csf/upgrade.sh
 chmod 700 /usr/local/cpanel/whostmgr/docroot/cgi/configserver/csf/upgrade.sh
