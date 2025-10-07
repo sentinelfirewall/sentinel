@@ -1,6 +1,6 @@
 ChangeLog:
 
-15.11 - Ubuntu 24 supported
+15.11 - Ubuntu 24 supported, wpbl.info removed from blocklists
 
 15.11 - Small changes: replaces ConfigServer with Sentinel, cleanup install script, update method from csf.
 
