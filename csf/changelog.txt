@@ -1,5 +1,7 @@
 ChangeLog:
 
+15.11 - Ubuntu 24 supported
+
 15.11 - Small changes: replaces ConfigServer with Sentinel, cleanup install script, update method from csf.
 
 15.10 - Fork, uses github for updates
