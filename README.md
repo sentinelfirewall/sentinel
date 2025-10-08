@@ -1,4 +1,4 @@
-# Sentinel - fork of ConfigServer Firewall & Security
+# Sentinel Firewall - fork of ConfigServer Firewall & Security
 
 ⚡ The sudden shutdown of Configserver in 2025 has left a huge gap in our ecosystem. For years, ConfigServer Firewall (CSF) has been the backbone of server security for hosting providers and control panels —stable, feature-rich, and trusted by sysadmins everywhere.
 
