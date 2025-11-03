@@ -54,14 +54,7 @@ th {
 .table tbody>tr>td {
 	vertical-align: middle;
 }
-.panel-default > .panel-heading-cxs {
-	font-weight: bold;
-	background: #F4F4EA;
-}
-.panel-default > .panel-footer-cxs {
-	font-weight: bold;
-	background: #F4F4EA;
-}
+
 #loader {
 	position: absolute;
 	left: 50%;
