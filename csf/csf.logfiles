@@ -20,7 +20,6 @@
 # All:
 /var/log/messages
 /var/log/lfd.log
-/var/log/cxswatch.log
 
 # RedHat:
 /var/log/secure
