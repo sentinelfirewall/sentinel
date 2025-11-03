@@ -1489,7 +1489,7 @@ sub apachecheck {
 		$status = 0;
 		if (my @ls = grep {$_ =~ /cloudflare_module/} @modules) {$status = 1} else {$status = 0}
 		if ($config{CF_ENABLE}) {$status = 0}
-		&addline($status,"Check apache for mod_cloudflare","This module logs the real users IP address to Apache. If this is reported to lfd via ModSecurity, cxs or some other vector through Apache it will lead to that IP being blocked, but because the IP is coming through the CloudFlare service the IP will <b>not</b> be blocked as so far as iptables is concerned the originating IP address is CloudFlare itself and the abuse will continue. To block these IP's in the CloudFlare Firewall look at using CF_ENABLE in csf.conf");
+		&addline($status,"Check apache for mod_cloudflare","This module logs the real users IP address to Apache. If this is reported to lfd via ModSecurity, or some other vector through Apache it will lead to that IP being blocked, but because the IP is coming through the CloudFlare service the IP will <b>not</b> be blocked as so far as iptables is concerned the originating IP address is CloudFlare itself and the abuse will continue. To block these IP's in the CloudFlare Firewall look at using CF_ENABLE in csf.conf");
 
 		$status = 0;
 		if (my @ls = grep {$_ =~ /frontpage_module/} @modules) {$status = 1}
