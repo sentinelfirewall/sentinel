@@ -353,27 +353,6 @@ sub processline {
 		if (checkip(\$ip)) {return ("Failed web page login from","$ip|$acc","htpasswd")} else {return}
 	}
 
-#cxs Apache
-	if (($config{LF_CXS}) and ($globlogs{MODSEC_LOG}{$lgfile}) and ($line =~ /^\[\S+\s+\S+\s+\S+\s+\S+\s+\S+\] \[(\S*:)?error\] (\[pid \d+(:tid \d+)?\] )?\[(client|remote) (\S+)\]( \[client \S+\])? (\w+: )?ModSecurity:(( \[[^]]+\])*)? Access denied with code \d\d\d \(phase 2\)\. File \"[^\"]*\" rejected by the approver script \"\/etc\/cxs\/cxscgi\.sh\"/)) {
-        my $ip = $5;
-		my $acc = "";
-		my $domain = "";
-		if ($line =~ /\] \[hostname "([^\"]+)"\] \[/) {$domain = $1}
-		$ip =~ s/^::ffff://;
-		if ($config{LF_APACHE_ERRPORT} == 2 and $ip =~ /(.*):\d+$/) {$ip = $1}
-		if (checkip(\$ip)) {return ("cxs mod_security triggered by","$ip|$acc|$domain","cxs")} else {return}
-	}
-#cxs Litespeed
-	if (($config{LF_CXS}) and ($globlogs{MODSEC_LOG}{$lgfile}) and ($line =~ /^\[\S+\s+\S+\s+\S+\s+\S+\s+\S+\] \[(\S*:)?error\] (\[pid \d+(:tid \d+)?\] )?\[(client|remote) (\S+)\]( \[client \S+\])? (\w+: )?ModSecurity:(( \[[^]]+\])*)? Access denied with code \d\d\d, \[Rule: 'FILES_TMPNAMES' '\@inspectFile \/etc\/cxs\/cxscgi\.sh'\] \[id "1010101"\]/)) {
-        my $ip = $5;
-		my $acc = "";
-		my $domain = "";
-		if ($line =~ /\] \[hostname "([^\"]+)"\] \[/) {$domain = $1}
-		$ip =~ s/^::ffff://;
-		if ($config{LF_APACHE_ERRPORT} == 2 and $ip =~ /(.*):\d+$/) {$ip = $1}
-		if (checkip(\$ip)) {return ("cxs mod_security triggered by","$ip|$acc|$domain","cxs")} else {return}
-	}
-
 #mod_security v1
 	if (($config{LF_MODSEC}) and ($globlogs{MODSEC_LOG}{$lgfile}) and ($line =~ /^\[\S+\s+\S+\s+\S+\s+\S+\s+\S+\] \[error\] \[(client|remote) (\S+)\] mod_security: Access denied/)) {
         my $ip = $2;
