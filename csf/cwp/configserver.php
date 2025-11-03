@@ -10,10 +10,6 @@
 		echo "+'		<li><a href=\"index.php?module=csfofficial\"><span class=\"icon16 icomoon-icon-arrow-right-3\"></span>Sentinel Firewall</a></li>'\n";
 	}
 
-	if (file_exists("/usr/local/cwpsrv/htdocs/resources/admin/modules/cxs.php")) {
-		echo "+'		<li><a href=\"index.php?module=cxs\"><span class=\"icon16 icomoon-icon-arrow-right-3\"></span>Sentinel Exploit Scanner</a></li>'\n";
-	}
-
 ?>
 		+'	</ul>'
 		+'</li>';
