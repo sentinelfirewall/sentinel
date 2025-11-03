@@ -1,5 +1,7 @@
 ChangeLog:
 
+15.12 - Removed legacy CXS integration and configuration options: UI_CXS, LF_CXS, LF_CXS_PERM, PORTS_cxs
+
 15.11 - Ubuntu 24 supported, wpbl.info removed from blocklists, removed checks if cpanel version is less than v65
 
 15.11 - Small changes: replaces ConfigServer with Sentinel, cleanup install script, update method from csf.
