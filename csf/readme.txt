@@ -1592,7 +1592,7 @@ There are several restrictions to using this feature:
 1.  All lfd blocks will be temporary blocks so that csf/lfd can keep blocks in
     sync with CloudFlare
 
-2.  Automatic blocks via lfd are limited to LF_MODSEC and LF_CXS triggers as
+2.  Automatic blocks via lfd are limited to LF_MODSEC triggers as
     only through these can the domain name be determined. Any users that own
     domains that are involved in the trigger will get a block in their
     CloudFlare Firewall. Additionally, any users with the special case "any"
@@ -1626,7 +1626,7 @@ CF_TEMP should be configured taking into account the maximum number of rules
 that the CloudFlare account allows: https://goo.gl/ssGu7v
 
 All CloudFlare users for the domains that are involved in LF_MODSEC and
-LF_CXS triggers will have a CloudFlare rule added. Any CloudFlare account
+triggers will have a CloudFlare rule added. Any CloudFlare account
 configured to use the special case "any" field value in csf.cloudflare will
 have a CloudFlare rule added regardless of domain.
 
