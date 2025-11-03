@@ -58,9 +58,6 @@ rm -Rfv /usr/local/CyberCP/public/static/configservercsf
 
 sed -i "/configservercsf/d" /usr/local/CyberCP/CyberCP/settings.py
 sed -i "/configservercsf/d" /usr/local/CyberCP/CyberCP/urls.py
-if [ ! -e /etc/cxs/cxs.pl ]; then
-    sed -i "/configserver/d" /usr/local/CyberCP/baseTemplate/templates/baseTemplate/index.html
-fi
 
 service lscpd restart
 
