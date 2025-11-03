@@ -46,12 +46,12 @@ umask(0177);
 our ($verbose, $version, $logintarget, $noowner, $warning, $accept, $ipscidr,
      $ipv6reg, $ipv4reg,$ethdevin, $ethdevout, $ipscidr6, $eth6devin,
 	 $eth6devout, $statemodule, $logouttarget, $cleanreg, $slurpreg,
-	 $faststart, $urlget, $statemodulenew, $statemodule6new, $cxsreputation);
+	 $faststart, $urlget, $statemodulenew, $statemodule6new);
 
 our ($IPTABLESLOCK, $CSFLOCKFILE);
 
 our (%input, %config, %ips, %ifaces, %messengerports,%sanitydefault,
-     %blocklists, %cxsports);
+     %blocklists);
 
 our (@ipset, @faststart4, @faststart6, @faststart4nat, @faststartipset,
      @faststart6nat);
@@ -332,37 +332,12 @@ sub load_config {
 		my ($name,$interval,$max,$url) = split(/\|/,$line);
 		if ($name =~ /^\w+$/) {
 			$name = substr(uc $name, 0, 25);
-			if ($name =~ /^CXS_/) {$name =~ s/^CXS_/X_CXS_/}
 			if ($interval < 3600) {$interval = 3600}
 			if ($max eq "") {$max = 0}
 			$blocklists{$name}{interval} = $interval;
 			$blocklists{$name}{max} = $max;
 			$blocklists{$name}{url} = $url;
 		}
-	}
-	if (-e "/etc/cxs/cxs.reputation" and -e "/usr/local/csf/lib/Sentinel/cxs.pm") {
-		require Sentinel::cxs;
-		import Sentinel::cxs;
-		$cxsreputation = 1;
-		if (-e "/etc/cxs/cxs.blocklists") {
-			my $all = 0;
-			my @lines = slurp("/etc/cxs/cxs.blocklists");
-			if (grep {$_ =~ /^CXS_ALL/} @lines) {$all = 1}
-			foreach my $line (@lines) {
-				$line =~ s/$cleanreg//g;
-				if ($line =~ /^(\s|\#|$)/) {next}
-				my ($name,$interval,$max,$url) = split(/\|/,$line);
-				if ($all and $name ne "CXS_ALL") {next}
-				if ($name =~ /^\w+$/) {
-					$name = substr(uc $name, 0, 25);
-					if ($max eq "") {$max = 0}
-					$blocklists{$name}{interval} = $interval;
-					$blocklists{$name}{max} = $max;
-					$blocklists{$name}{url} = $url;
-				}
-			}
-		}
-		%cxsports = Sentinel::cxs::Rports();
 	}
 
 	my @binaries = ("IPTABLES","IPTABLES_SAVE","IPTABLES_RESTORE","MODPROBE","SENDMAIL","PS","VMSTAT","LS","MD5SUM","TAR","CHATTR","UNZIP","GUNZIP","DD","TAIL","GREP","HOST");
@@ -2442,12 +2417,7 @@ sub doportfilters {
 				&syscommand(__LINE__,"$config{IPTABLES} $config{IPTABLESWAIT} $verbose -I BOGON -i $device -j RETURN");
 			}
 		}
-		if ($cxsreputation and $name =~ /^CXS_/ and $name ne "CXS_ALL" and $cxsports{$name} ne "") {
-			&syscommand(__LINE__,"$config{IPTABLES} $config{IPTABLESWAIT} $verbose -A LOCALINPUT -p tcp -m multiport --dport $cxsports{$name} $ethdevin -j $name");
-			if ($config{IPV6}) {
-				&syscommand(__LINE__,"$config{IP6TABLES} $config{IPTABLESWAIT} $verbose -A LOCALINPUT -p tcp -m multiport --dport $cxsports{$name} $ethdevin -j $name");
-			}
-		} else {
+		if {
 			&syscommand(__LINE__,"$config{IPTABLES} $config{IPTABLESWAIT} $verbose -A LOCALINPUT $ethdevin -j $name");
 			if ($config{IPV6}) {
 				&syscommand(__LINE__,"$config{IP6TABLES} $config{IPTABLESWAIT} $verbose -A LOCALINPUT $ethdevin -j $name");
