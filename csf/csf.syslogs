@@ -22,7 +22,6 @@
 
 # All:
 /var/log/cron
-/var/log/cxswatch.log
 /var/log/lfd.log
 /var/log/maillog
 /var/log/messages
