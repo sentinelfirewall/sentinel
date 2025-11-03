@@ -86,9 +86,8 @@ EOF
 	unless ($FORM{do} eq "console") {
 		print "<div class='container-fluid'>\n";
 		print "<div class='pull-right' style='margin:8px'>\n";
-		if ($config{UI_CXS} or $config{UI_CSE}) {
+		if ($config{UI_CSE}) {
 			print "<form action='$script' method='post'><select name='csfapp'><option>csf</option>";
-			if ($config{UI_CXS}) {print "<option>cxs</option>"}
 			if ($config{UI_CSE}) {print "<option selected>cse</option>"}
 			print "<", "/select> <input class='btn btn-default' type='submit' value='Switch'></form>\n";
 		}
