@@ -43,8 +43,6 @@
 #
 # The downloaded list can be a zip file. The zip file MUST only contain a
 # single text file of a single IP/CIDR per line
-#
-# Note: CXS_ is a reserved prefix for the blocklist name and MUST NOT be used
 
 # Spamhaus Don't Route Or Peer List (DROP)
 # Details: http://www.spamhaus.org/drop/
