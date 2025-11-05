@@ -1,5 +1,5 @@
 #!/bin/sh
-echo "Uninstalling csf and lfd..."
+echo "Uninstalling Sentinel Firewall..."
 echo
 
 sed -i 's/lfd=ON/lfd=OFF/' /usr/local/directadmin/data/admin/services.status
