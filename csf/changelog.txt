@@ -1,9 +1,18 @@
 ChangeLog:
 
-15.12 - Removed legacy CXS integration and configuration options: UI_CXS, LF_CXS, LF_CXS_PERM, PORTS_cxs
+## 15.12
+Removed legacy CXS integration and configuration options: UI_CXS, LF_CXS, LF_CXS_PERM, PORTS_cxs
+Resolved bug: [Can't locate Sentinel/Config.pm in @INC when launch "csf -r" #3](https://github.com/sentinelfirewall/sentinel/issues/3)
 
-15.11 - Ubuntu 24 supported, wpbl.info removed from blocklists, removed checks if cpanel version is less than v65
+## 15.11
+Ubuntu 24 supported
+wpbl.info removed from blocklists
+removed checks if cpanel version is less than v65
 
-15.11 - Small changes: replaces ConfigServer with Sentinel, cleanup install script, update method from csf.
+## 15.11
+Replaces ConfigServer with Sentinel in file names
+cleanup install script
+upgrade method from CSF
 
-15.10 - Fork, uses github for updates
+## 15.10
+Fork, uses github for updates
