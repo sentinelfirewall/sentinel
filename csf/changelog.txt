@@ -1,5 +1,3 @@
-ChangeLog:
-
 ## 15.12
 Removed legacy CXS integration and configuration options: UI_CXS, LF_CXS, LF_CXS_PERM, PORTS_cxs
 Resolved bug: [Can't locate Sentinel/Config.pm in @INC when launch "csf -r" #3](https://github.com/sentinelfirewall/sentinel/issues/3)
