@@ -1,5 +1,5 @@
 #!/bin/sh
-echo "Uninstalling csf and lfd..."
+echo "Uninstalling Sentinel Firewall..."
 echo
 
 /usr/sbin/csf -f
