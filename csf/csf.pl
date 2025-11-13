@@ -2417,11 +2417,9 @@ sub doportfilters {
 				&syscommand(__LINE__,"$config{IPTABLES} $config{IPTABLESWAIT} $verbose -I BOGON -i $device -j RETURN");
 			}
 		}
-		if {
-			&syscommand(__LINE__,"$config{IPTABLES} $config{IPTABLESWAIT} $verbose -A LOCALINPUT $ethdevin -j $name");
-			if ($config{IPV6}) {
-				&syscommand(__LINE__,"$config{IP6TABLES} $config{IPTABLESWAIT} $verbose -A LOCALINPUT $ethdevin -j $name");
-			}
+		&syscommand(__LINE__,"$config{IPTABLES} $config{IPTABLESWAIT} $verbose -A LOCALINPUT $ethdevin -j $name");
+		if ($config{IPV6}) {
+			&syscommand(__LINE__,"$config{IP6TABLES} $config{IPTABLESWAIT} $verbose -A LOCALINPUT $ethdevin -j $name");
 		}
 	}
 
