@@ -1,3 +1,7 @@
+## 15.13
+Resolved bug: [Syntax error in csf.pl line 2420: invalid "if {" statement #73](https://github.com/sentinelfirewall/sentinel/issues/7)
+Resolved bug: [Cannot upgrade from csf | Cyberpanel #5](https://github.com/sentinelfirewall/sentinel/issues/5)
+
 ## 15.12
 Removed legacy CXS integration and configuration options: UI_CXS, LF_CXS, LF_CXS_PERM, PORTS_cxs
 Resolved bug: [Can't locate Sentinel/Config.pm in @INC when launch "csf -r" #3](https://github.com/sentinelfirewall/sentinel/issues/3)
