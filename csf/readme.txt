@@ -17,7 +17,7 @@
 ###############################################################################
 
 
-ConfigServer Security & Firewall
+Sentinel Firewall
 ################################
 
 This suite of scripts provides:
@@ -121,7 +121,7 @@ Directory structure:
 Login Failure Daemon (lfd)
 ==========================
 
-To complement the ConfigServer Firewall, we have developed a daemon process
+To complement the Sentinel Firewall, we have developed a daemon process
 that runs all the time and periodically (every X seconds) scans the latest log
 file entries for login attempts against your server that continually fail
 within a short period of time. Such attempts are often called "Brute-force
@@ -605,8 +605,8 @@ tcp|out|d=80||u=99
 icmp|in|d=ping|s=44.33.22.11
 
 # TCP connections inbound to port 22 from Dynamic DNS address
-# www.configserver.com (for use in csf.dyndns only)
-tcp|in|d=22|s=www.configserver.com
+# www.sentinelfirewall.org (for use in csf.dyndns only)
+tcp|in|d=22|s=www.sentinelfirewall.org
 
 # TCP connections inbound to port 22,80,443 from IP 44.33.22.11
 d=22,80,443|s=44.33.22.11
@@ -1709,8 +1709,8 @@ Note: None of the apf conf files are used and are ignored by csf.
 The Firewall UI option in NodeWorx should now not be used and any changes made
 there will not be reflected in iptables.
 
-There is a UI option under "ConfigServer Services" for "ConfigServer Firewall &
-Security" that should now be used.
+There is a UI option under "ConfigServer Services" for "Sentinel Firewall" 
+that should now be used.
 
 The installation will also replace the Firewall page in NodeWorx with a dummy
 page stating that csf should be used instead. lfd will replace the page upon
@@ -1733,7 +1733,7 @@ lfd.
 
 CWP integration is available for csf. Since CWP already has some custom
 modifications, these have been taken into account. To access the now inbuilt UI
-in CWP, there is a new menu option in CWP > ConfigServer Scripts > ConfigServer
+in CWP, there is a new menu option in CWP > ConfigServer Scripts > Sentinel
 Firewall.
 
 There is now an option in /etc/csf/csf.conf for LF_CWP for login failure
