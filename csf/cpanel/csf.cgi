@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-#WHMADDON:csf:Sentinel Security & Firewall
+#WHMADDON:csf:Sentinel Firewall
 ###############################################################################
 # Copyright (C) 2025 Sentinel Project (https://github.com/sentinelfirewall/sentinel)
 # Copyright (C) 2006-2025 Jonathan Michaelson (https://github.com/waytotheweb/scripts)
