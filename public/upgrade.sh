@@ -31,7 +31,7 @@ fi
 
 # 4. Check CSF/Sentinel version
 echo -n "Checking csf version... "
-CSFVER=$(csf -v 2>/dev/null | awk '{print $NF}')
+CSFVER=$(csf -v 2>/dev/null | grep -oP 'v\K[0-9.]+')
 
 echo "$CSFVER"
 
