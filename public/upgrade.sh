@@ -35,7 +35,7 @@ CSFVER=$(csf -v 2>/dev/null | awk '{print $NF}')
 
 echo "$CSFVER"
 
-# 4. success?
+# 5. success?
 REQUIRED_VER="15.11"
 
 version_ge() {
