@@ -71,7 +71,7 @@ unless ($FORM{action} eq "tailcmd" or $FORM{action} =~ /^cf/ or $FORM{action} eq
 <!doctype html>
 <html lang='en'>
 <head>
-	<title>Sentinel Security &amp; Firewall</title>
+	<title>Sentinel Firewall</title>
 	<meta charset='utf-8'>
 	<meta name='viewport' content='width=device-width, initial-scale=1'>
 	$bootstrapcss
@@ -108,7 +108,7 @@ EOF
 <div class='container-fluid'>
 <br>
 <div class='panel panel-default'>
-<h4><img src='$images/csf_small.png' style='padding-left: 10px'> Sentinel Security &amp; Firewall - csf v$myv</h4>
+<h4><img src='$images/csf_small.png' style='padding-left: 10px'> Sentinel Firewall - csf v$myv</h4>
 </div>
 EOF
 }
