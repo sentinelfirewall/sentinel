@@ -42,7 +42,7 @@ sub acl_desc {
             'acl'              => 'software-Sentinel-csf',       #this should be "software-$key"
             'default_value'    => 0,
             'default_ui_value' => 0,                        # NOTE: this is for ui; first time setting reseller privs
-            'name'             => 'Sentinel Security & Firewall (Reseller UI)',
+            'name'             => 'Sentinel Firewall (Reseller UI)',
             'acl_subcat'       => 'Third Party Services',
         },
     ];
