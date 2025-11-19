@@ -564,7 +564,7 @@ chown -f root:root /usr/sbin/csf /usr/sbin/lfd /etc/logrotate.d/lfd /etc/cron.d/
 
 cd webmin ; tar -czf /usr/local/csf/csfwebmin.tgz ./*
 ln -svf /usr/local/csf/csfwebmin.tgz /etc/csf/
-
+mv /usr/local/cpanel/Cpanel/Config/ConfigObj/Driver/ConfigServercsf/META.pm /usr/local/cpanel/Cpanel/Config/ConfigObj/Driver/ConfigServercsf/META
 echo
 echo "Installation Completed"
 echo
