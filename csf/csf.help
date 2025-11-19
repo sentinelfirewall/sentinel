@@ -7,8 +7,8 @@ SYNOPSIS
        csf [OPTIONS]
 
 DESCRIPTION
-       This   manual   documents   the	csf  command  line  options  for  the  Sentinel  &	Security  Firewall.  See  /etc/csf/csf.conf  and
-       /etc/csf/readme.txt for more detailed information on how to use and configure this application.
+       This manual documents the csf command-line options for the Sentinel Firewall.
+       See /etc/csf/csf.conf and /etc/csf/readme.txt for more detailed information on how to use and configure this application.
 
 OPTIONS
        -h,  --help
