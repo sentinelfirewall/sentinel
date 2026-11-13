@@ -383,7 +383,9 @@ cp -avf install.txt /etc/csf/
 cp -avf version.txt /etc/csf/
 cp -avf license.txt /etc/csf/
 cp -avf webmin /usr/local/csf/lib/
-cp -avf ConfigServer /usr/local/csf/lib/Sentinel
+mkdir -p /usr/local/csf/lib/Sentinel
+rm -rf /usr/local/csf/lib/Sentinel/ConfigServer
+cp -avf ConfigServer/. /usr/local/csf/lib/Sentinel/
 cp -avf Net /usr/local/csf/lib/
 cp -avf Geo /usr/local/csf/lib/
 cp -avf Crypt /usr/local/csf/lib/

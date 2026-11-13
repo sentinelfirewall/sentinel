@@ -442,7 +442,10 @@ sub getdownloadserver {
 	my $chosen;
 	if (-e $downloadservers) {
 		foreach my $line (slurp($downloadservers)) {
-			$line =~ s/$cleanreg//g; #test
+			$line =~ s/$cleanreg//g;
+			if ($line eq "" or $line =~ /^\#/) {next}
+			$line =~ s/^https?:\/\///i;
+			$line =~ s/\/+$//;
 			push @servers, $line;
 		}
 		$chosen = $servers[rand @servers];

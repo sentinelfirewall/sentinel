@@ -1,3 +1,7 @@
+## 15.17
+Resolved bug: upgrades did not update Perl modules - install scripts copied ConfigServer/ into /usr/local/csf/lib/Sentinel/ConfigServer/ instead of over /usr/local/csf/lib/Sentinel/, so upgraded servers kept running old modules (including without the 15.15 security and sshd-session fixes)
+Resolved bug: update checks randomly failed ("No Host option provided") because comment and blank lines in /etc/csf/downloadservers were used as download servers
+
 ## 15.16
 Updates are now downloaded from the sentinelfirewall/sentinel repository (downloadservers, built-in default and csget.pl previously pointed to the old stefanpejcic/sentinelfw repository, which no longer receives releases)
 Resolved bug: built-in default download server included https:// which produced an invalid update URL
