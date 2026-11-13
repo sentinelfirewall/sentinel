@@ -1,3 +1,7 @@
+## 15.16
+Updates are now downloaded from the sentinelfirewall/sentinel repository (downloadservers, built-in default and csget.pl previously pointed to the old stefanpejcic/sentinelfw repository, which no longer receives releases)
+Resolved bug: built-in default download server included https:// which produced an invalid update URL
+
 ## 15.15
 Security fix: [CVE-2026-65638] command injection in MESSENGER reCAPTCHA unblock - the curl/wget download fallback no longer goes through a shell and the g-recaptcha-response value is strictly validated
 Security fix: [CVE-2026-65639] command injection through advanced allow/deny rules (e.g. from GLOBAL_ALLOW/GLOBAL_DENY feeds) - rules containing characters outside of IP/CIDR/port/uid syntax are now rejected in csf and lfd

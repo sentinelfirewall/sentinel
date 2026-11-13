@@ -447,7 +447,7 @@ sub getdownloadserver {
 		}
 		$chosen = $servers[rand @servers];
 	}
-	if ($chosen eq "") {$chosen = "https://raw.githubusercontent.com/stefanpejcic/sentinelfw/refs/heads/main/"}
+	if ($chosen eq "") {$chosen = "raw.githubusercontent.com/sentinelfirewall/sentinel/refs/heads/main"}
 	return $chosen;
 }
 ## end getdownloadserver

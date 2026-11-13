@@ -40,7 +40,7 @@ open STDERR, ">", "/dev/null";
 $0 = "Sentinel Version Check";
 
 # Single download server
-my $downloadserver = "https://raw.githubusercontent.com/stefanpejcic/sentinelfw/refs/heads/main/";
+my $downloadserver = "https://raw.githubusercontent.com/sentinelfirewall/sentinel/refs/heads/main";
 
 # Single version file to check
 my $version_file = "/csf/version.txt";
