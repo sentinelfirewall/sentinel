@@ -381,7 +381,7 @@ sub messenger {
 							my $error;
 							my $success;
 							my $failure;
-							if (($type eq "HTML") and ($firstline =~ /^GET \/unblk\?g-recaptcha-response=(\S+)/i)) {
+							if (($type eq "HTML") and ($firstline =~ /^GET \/unblk\?g-recaptcha-response=([\w\-]+)(?:\s|&|$)/i)) {
 								my $recv = $1;
 								my $status = 1;
 								my $text;

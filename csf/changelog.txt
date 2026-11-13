@@ -1,4 +1,6 @@
 ## 15.15
+Security fix: [CVE-2026-65638] command injection in MESSENGER reCAPTCHA unblock - the curl/wget download fallback no longer goes through a shell and the g-recaptcha-response value is strictly validated
+Security fix: [CVE-2026-65639] command injection through advanced allow/deny rules (e.g. from GLOBAL_ALLOW/GLOBAL_DENY feeds) - rules containing characters outside of IP/CIDR/port/uid syntax are now rejected in csf and lfd
 Resolved bug: lfd didn't detect SSH login failures from OpenSSH 9.8+, which logs them as sshd-session[PID] (Ubuntu 26.04, Debian 13, EL10)
 
 ## 15.13

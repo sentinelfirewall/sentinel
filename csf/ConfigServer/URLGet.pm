@@ -246,21 +246,21 @@ sub binget {
 	my $file = shift;
 	my $quiet = shift;
 	my $errormsg = shift;
-	$url = "'$url'";
-
-	my $cmd;
+	# CVE-2026-65638: never pass the URL through a shell, run curl/wget with an argument list
+	my @cmd;
 	if (-e $config{CURL}) {
-		$cmd = $config{CURL}." -skLf -m 120";
-		if ($file) {$cmd = $config{CURL}." -kLf -m 120 -o";}
+		@cmd = ($config{CURL}, "-skLf", "-m", "120");
+		if ($file) {@cmd = ($config{CURL}, "-kLf", "-m", "120", "-o")}
 	}
 	elsif (-e $config{WGET}) {
-		$cmd = $config{WGET}." -qT 120 -O-";
-		if ($file) {$cmd = $config{WGET}." -T 120 -O"}
+		@cmd = ($config{WGET}, "-qT", "120", "-O-");
+		if ($file) {@cmd = ($config{WGET}, "-T", "120", "-O")}
 	}
-	if ($cmd ne "") {
+	if (@cmd) {
+		my $cmd = join(" ",@cmd);
 		if ($file) {
 			my ($childin, $childout);
-			my $cmdpid = open3($childin, $childout, $childout, $cmd." $file\.tmp $url");
+			my $cmdpid = open3($childin, $childout, $childout, @cmd, "$file\.tmp", "--", $url);
 			my @output = <$childout>;
 			waitpid ($cmdpid, 0);
 			unless ($quiet and $option != 3) {
@@ -279,7 +279,7 @@ sub binget {
 			}
 		} else {
 			my ($childin, $childout);
-			my $cmdpid = open3($childin, $childout, $childout, $cmd." $url");
+			my $cmdpid = open3($childin, $childout, $childout, @cmd, "--", $url);
 			my @output = <$childout>;
 			waitpid ($cmdpid, 0);
 			if (scalar @output > 0) {

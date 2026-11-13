@@ -3555,6 +3555,11 @@ sub linefilter {
 	if ($line =~ /^\#/) {return}
 	if ($line =~ /^Include/) {return}
 	if ($line eq "") {return}
+	# CVE-2026-65639: rule fields end up in a shell command, only allow characters valid in IPs, CIDRs and advanced port/uid filters
+	if ($line !~ /^[a-z0-9\.\:\|\=\_\,\-\/]+$/) {
+		print "csf: Invalid characters in rule [$line] - ignored\n";
+		return;
+	}
 
 	my $checkip = checkip(\$line);
 	my $iptables = $config{IPTABLES};
