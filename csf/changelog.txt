@@ -1,3 +1,6 @@
+## 15.15
+Resolved bug: lfd didn't detect SSH login failures from OpenSSH 9.8+, which logs them as sshd-session[PID] (Ubuntu 26.04, Debian 13, EL10)
+
 ## 15.13
 Resolved bug: [Syntax error in csf.pl line 2420: invalid "if {" statement #73](https://github.com/sentinelfirewall/sentinel/issues/7)
 Resolved bug: [Cannot upgrade from csf | Cyberpanel #5](https://github.com/sentinelfirewall/sentinel/issues/5)
