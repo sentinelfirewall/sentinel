@@ -41,4 +41,4 @@ wget -O /etc/csf/csf.pl https://gist.githubusercontent.com/stefanpejcic/e2648c6d
 
 ## Docs
 
-https://sentinelfirewall.org/docs/intro/
+https://sentinelfirewall.github.io/website/docs/intro/

@@ -3,7 +3,7 @@
 set -e
 
 echo "Starting upgrade from CSF to Sentinel..."
-# https://sentinelfirewall.org/docs/upgrade-from-csf/
+# https://sentinelfirewall.github.io/website/docs/upgrade-from-csf/
 
 # 1. changes links from download.configserver.com to github, but keeps the perl ConfigServer
 echo "Downloading transitional upgrade script..."
